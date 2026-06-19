@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0042)file:///C:/Users/Usuario/Downloads/oc.html -->
+<!-- saved from url=(0044)file:///C:/Users/Usuario/Downloads/oc_1.html -->
 <html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -407,15 +407,23 @@ function toast(msg){
 }
 
 // ── CONFIG API ──
-var API_URL = 'PENDIENTE_URL'; // <-- pegar aquí la URL del Apps Script
+var API_URL = 'https://script.google.com/macros/s/AKfycbxEnB3l6HfXfm4nDLqVUla1jT-KKnk65X1ySP3aOTD7qUxdsF0ZwcwMbs_R-wWiU4zy/exec'; // URL del Apps Script
 
-// Todo via GET con payload para evitar CORS desde file://
+// Llamadas al Apps Script via fetch con mode cors
 function apiGet(action) {
-  return fetch(API_URL + '?action=' + action);
+  return fetch(API_URL + '?action=' + action, {
+    method: 'GET',
+    mode: 'cors',
+    credentials: 'omit'
+  });
 }
 function apiPost(body) {
   var payload = encodeURIComponent(JSON.stringify(body));
-  return fetch(API_URL + '?payload=' + payload);
+  return fetch(API_URL + '?payload=' + payload, {
+    method: 'GET',
+    mode: 'cors',
+    credentials: 'omit'
+  });
 }
 
 // ── STORAGE LOCAL (cache) ──
@@ -1336,6 +1344,10 @@ document.addEventListener('DOMContentLoaded', function(){
   document.getElementById('btn-sync').addEventListener('click', function(){ sincronizar(false); });
 
   // Init
+  // Pre-cargar URL si no hay una guardada
+  if(!localStorage.getItem('soc_api_url')){
+    localStorage.setItem('soc_api_url', 'https://script.google.com/macros/s/AKfycbxEnB3l6HfXfm4nDLqVUla1jT-KKnk65X1ySP3aOTD7qUxdsF0ZwcwMbs_R-wWiU4zy/exec');
+  }
   API_URL = getAPIUrl(); // cargar URL guardada
   updateDL();
   renderHist();
