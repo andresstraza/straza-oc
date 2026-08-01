@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<!-- saved from url=(0047)file:///C:/Users/Usuario/Downloads/index_4.html -->
+<!-- saved from url=(0048)file:///C:/Users/Usuario/Downloads/index_22.html -->
 <html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Straza — Órdenes de Compra</title>
-<link href="./index_files/css2" rel="stylesheet">
-<script src="./index_files/xlsx.full.min.js.descarga"></script>
+<link href="file:///C:/Users/Usuario/Downloads/index_files/css2" rel="stylesheet">
+<script src="file:///C:/Users/Usuario/Downloads/index_files/xlsx.full.min.js.descarga"></script>
 <style>
 :root{
   --dark:#06040F;--surf:#0F0B1E;--surf2:#160F2A;
@@ -146,6 +146,33 @@ input,select,textarea{font-family:inherit;outline:none}
 .prov-tbl th{background:rgba(30,15,161,.3);color:var(--mid);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:.38rem .55rem;text-align:left;font-weight:600}
 .prov-tbl td{padding:.35rem .45rem;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
 .prov-tbl .ti{padding:.22rem .38rem;font-size:.76rem}
+
+/* PROYECTOS */
+.tipo-PROJ{background:rgba(232,200,64,.12);color:var(--gold);border:1px solid rgba(232,200,64,.3)}
+.proj-card{border:1px solid var(--brd);background:var(--surf);padding:1rem;margin-bottom:.9rem}
+.proj-card:hover{border-color:rgba(232,200,64,.3)}
+.proj-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap}
+.proj-name{font-family:'Bebas Neue',sans-serif;font-size:1.25rem;letter-spacing:.04em;color:var(--white)}
+.proj-total{font-size:1.15rem;font-weight:800;color:var(--gold);white-space:nowrap}
+.proj-meta{font-size:.66rem;color:var(--dim);margin-top:.2rem;letter-spacing:.04em}
+.proj-chips{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:.55rem}
+.proj-chip{font-size:.58rem;letter-spacing:.06em;text-transform:uppercase;padding:.16rem .5rem;border:1px solid var(--brd2);color:var(--mid)}
+.proj-detail{margin-top:.75rem;border-top:1px solid var(--brd);padding-top:.6rem;display:none}
+.proj-detail.on{display:block}
+.proj-toggle{background:transparent;border:1px solid var(--brd2);color:var(--dim);padding:.3rem .7rem;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;margin-top:.6rem}
+.proj-toggle:hover{border-color:var(--gold);color:var(--gold)}
+.proj-tbl{width:100%;border-collapse:collapse;font-size:.74rem;margin-top:.4rem}
+.proj-tbl th{background:rgba(30,15,161,.3);color:var(--mid);font-size:.55rem;letter-spacing:.08em;text-transform:uppercase;padding:.35rem .5rem;text-align:left;font-weight:600}
+.proj-tbl th.r,.proj-tbl td.r{text-align:right}
+.proj-tbl td{padding:.3rem .5rem;border-bottom:1px solid rgba(255,255,255,.04)}
+.proj-summary{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.7rem;margin-bottom:1.1rem}
+.psum{border:1px solid var(--brd);background:var(--surf);padding:.7rem .85rem}
+.psum-lbl{font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.psum-val{font-size:1.25rem;font-weight:800;color:var(--gold);font-family:'Bebas Neue',sans-serif;letter-spacing:.03em;margin-top:.15rem}
+.btn-cp{background:transparent;border:1px dashed rgba(167,139,250,.35);color:var(--purple);padding:.42rem .9rem;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+.btn-cp:hover{background:rgba(167,139,250,.06);border-color:var(--purple)}
+.btn-cp:disabled{opacity:.4;cursor:not-allowed}
+.btn-dup:hover{border-color:var(--purple);color:var(--purple)}
 </style>
 </head>
 <body>
@@ -157,15 +184,18 @@ input,select,textarea{font-family:inherit;outline:none}
     <div class="hdr-sub">Straza SAS · NIT 830.026.954-5</div>
   </div>
   <div class="hdr-right">
-    <span id="sync-status" style="font-size: 0.62rem; color: var(--green);">🟢 Sincronizado 07:34 p. m.</span>
+    <span id="sync-status" style="font-size: 0.62rem; color: var(--green);">🟢 Sincronizado 08:08 p. m.</span>
     <button id="btn-sync" style="background:transparent;border:1px solid var(--brd2);color:var(--mid);padding:.38rem .75rem;font-size:.63rem;text-transform:uppercase;letter-spacing:.08em;cursor:pointer">↻ Sincronizar</button>
-    <span id="count-lbl" style="font-size:.65rem;color:var(--dim)">10 orden(es)</span>
+    <span id="count-lbl" style="font-size:.65rem;color:var(--dim)">84 orden(es)</span>
     <button class="btn-new" id="btn-nueva">+ Nueva Orden</button>
   </div>
 </div>
 
 <div class="tabs">
   <button class="tab on" id="tab-hist">📋 Historial</button>
+  <button class="tab" id="tab-proj">📊 Proyectos</button>
+  <button class="tab" id="tab-ofi">🏢 Oficina</button>
+  <button class="tab" id="tab-pagar">💸 Cuentas por pagar</button>
   <button class="tab" id="tab-cfg">⚙ Configuración</button>
 </div>
 
@@ -182,7 +212,7 @@ input,select,textarea{font-family:inherit;outline:none}
     <button class="fb" data-t="LOG">LOG · Logística</button>
     <button class="fb" data-t="OFI">OFI · Oficina</button>
   </div>
-  <div class="grid" id="grid"><div class="card"><div class="card-top"><span class="card-num">LOG-022</span><span class="card-date">22 de jun de 2026</span></div><div><span class="tipo-tag tipo-LOG">LOG</span></div><div class="card-prov">CRISTIAN PUERTA</div><div class="card-ref">COTIZACION 17</div><div class="card-total">Total: $958.250</div><div class="card-btns"><button class="btn-open" data-open="oc_1782154146595">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1782154146595">PDF</button><button class="btn-sm del" data-anular="oc_1782154146595">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">LOG-021</span><span class="card-date">22 de jun de 2026</span></div><div><span class="tipo-tag tipo-LOG">LOG</span></div><div class="card-prov">CRISTIAN PUERTA</div><div class="card-ref">COTIZACION 18</div><div class="card-total">Total: $1.209.442</div><div class="card-btns"><button class="btn-open" data-open="oc_1782154052693">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1782154052693">PDF</button><button class="btn-sm del" data-anular="oc_1782154052693">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">LOG-020</span><span class="card-date">22 de jun de 2026</span></div><div><span class="tipo-tag tipo-LOG">LOG</span></div><div class="card-prov">CRISTIAN PUERTA</div><div class="card-ref">COTIZACION 16</div><div class="card-total">Total: $837.306</div><div class="card-btns"><button class="btn-open" data-open="oc_1782153937083">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1782153937083">PDF</button><button class="btn-sm del" data-anular="oc_1782153937083">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">LOG-019</span><span class="card-date">22 de jun de 2026</span></div><div><span class="tipo-tag tipo-LOG">LOG</span></div><div class="card-prov">CRISTIAN PUERTA</div><div class="card-ref">COTIZACION 15</div><div class="card-total">Total: $2.046.748</div><div class="card-btns"><button class="btn-open" data-open="oc_1782153619285">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1782153619285">PDF</button><button class="btn-sm del" data-anular="oc_1782153619285">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">LOG-018</span><span class="card-date">22 de jun de 2026</span></div><div><span class="tipo-tag tipo-LOG">LOG</span></div><div class="card-prov">CRISTIAN PUERTA</div><div class="card-ref">COTIZACION 11A</div><div class="card-total">Total: $930.340</div><div class="card-btns"><button class="btn-open" data-open="oc_1782153517462">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1782153517462">PDF</button><button class="btn-sm del" data-anular="oc_1782153517462">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">LOG-017</span><span class="card-date">22 de jun de 2026</span></div><div><span class="tipo-tag tipo-LOG">LOG</span></div><div class="card-prov">CRISTIAN PUERTA</div><div class="card-ref">COTIZACION 12A</div><div class="card-total">Total: $855.913</div><div class="card-btns"><button class="btn-open" data-open="oc_1782153365301">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1782153365301">PDF</button><button class="btn-sm del" data-anular="oc_1782153365301">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">LOG-016</span><span class="card-date">22 de jun de 2026</span></div><div><span class="tipo-tag tipo-LOG">LOG</span></div><div class="card-prov">CRISTIAN PUERTA</div><div class="card-ref">COTIZACION 13A</div><div class="card-total">Total: $837.306</div><div class="card-btns"><button class="btn-open" data-open="oc_1782153183827">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1782153183827">PDF</button><button class="btn-sm del" data-anular="oc_1782153183827">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">LOG-015</span><span class="card-date">19 de jun de 2026</span></div><div><span class="tipo-tag tipo-LOG">LOG</span></div><div class="card-prov">CRISTIAN PUERTA</div><div class="card-ref">COTIZACION 14A</div><div class="card-total">Total: $1.032.677</div><div class="card-btns"><button class="btn-open" data-open="oc_1781907778347">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1781907778347">PDF</button><button class="btn-sm del" data-anular="oc_1781907778347">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-016</span><span class="card-date">19 de jun de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">D2D+ MAS DISEÑO ESPACIO SAS</div><div class="card-ref">SV12477</div><div class="card-total">Total: $36.365.443</div><div class="card-btns"><button class="btn-open" data-open="oc_1781899758897">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1781899758897">PDF</button><button class="btn-sm del" data-anular="oc_1781899758897">Anular</button></div></div><div class="card" style="border-color:rgba(255,77,46,.4);opacity:.75"><div class="card-top"><span class="card-num">SER-015</span><span class="card-date">19 de jun de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span> <span style="font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--coral);font-weight:700">· ANULADA</span></div><div class="card-prov">Sin proveedor</div><div class="card-ref">SV12477</div><div class="card-total">Total: $0</div><div style="font-size:.62rem;color:var(--coral);margin-bottom:.4rem">✗ prueba</div><div class="card-btns"><button class="btn-open" data-open="oc_1781896881970">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1781896881970">PDF</button><span style="font-size:.58rem;color:var(--coral);letter-spacing:.08em;text-transform:uppercase;padding:.38rem .4rem">ANULADA</span></div></div></div>
+  <div class="grid" id="grid"><div class="card"><div class="card-top"><span class="card-num">COM-112</span><span class="card-date">31 de jul de 2026</span></div><div><span class="tipo-tag tipo-COM">COM</span></div><div class="card-prov">COMERCIALIZADORA SMART LED SAS</div><div class="card-ref">SV12192</div><div class="card-total">Total: $1.364.714</div><div class="card-btns"><button class="btn-open" data-open="oc_1785523943873">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1785523943873">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1785523943873">Duplicar</button><button class="btn-sm del" data-anular="oc_1785523943873">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">COM-111</span><span class="card-date">31 de jul de 2026</span></div><div><span class="tipo-tag tipo-COM">COM</span></div><div class="card-prov">ECG ELECTRONICS COMERCIALIZADORA SAS</div><div class="card-ref">SV12192</div><div class="card-total">Total: $343.277</div><div class="card-btns"><button class="btn-open" data-open="oc_1785516503930">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1785516503930">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1785516503930">Duplicar</button><button class="btn-sm del" data-anular="oc_1785516503930">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">COM-109</span><span class="card-date">31 de jul de 2026</span></div><div><span class="tipo-tag tipo-COM">COM</span></div><div class="card-prov">ACRILICOS INFINITO SAS</div><div class="card-ref">SV12292</div><div class="card-total">Total: $193.630</div><div class="card-btns"><button class="btn-open" data-open="oc_1785512070423">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1785512070423">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1785512070423">Duplicar</button><button class="btn-sm del" data-anular="oc_1785512070423">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">COM-108</span><span class="card-date">31 de jul de 2026</span></div><div><span class="tipo-tag tipo-COM">COM</span></div><div class="card-prov">ADH PAPELES ADHESIVOS SAS</div><div class="card-ref">SV12537</div><div class="card-total">Total: $116.620</div><div class="card-btns"><button class="btn-open" data-open="oc_1785511146359">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1785511146359">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1785511146359">Duplicar</button><button class="btn-sm del" data-anular="oc_1785511146359">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-060</span><span class="card-date">31 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">JONATHAN ALBERTO GODOY CASTRILLON</div><div class="card-ref">SV12542</div><div class="card-total">Total: $707.011</div><div class="card-btns"><button class="btn-open" data-open="oc_1785459993608">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1785459993608">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1785459993608">Duplicar</button><button class="btn-sm del" data-anular="oc_1785459993608">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-059</span><span class="card-date">31 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">DAYRA MARICEL RODRIGUEZ ARIAS</div><div class="card-ref">SV12542</div><div class="card-total">Total: $576.811</div><div class="card-btns"><button class="btn-open" data-open="oc_1785459639198">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1785459639198">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1785459639198">Duplicar</button><button class="btn-sm del" data-anular="oc_1785459639198">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">COM-104</span><span class="card-date">31 de jul de 2026</span></div><div><span class="tipo-tag tipo-COM">COM</span></div><div class="card-prov">ACRILICOS INFINITO SAS</div><div class="card-ref">SV12192</div><div class="card-total">Total: $387.259</div><div class="card-btns"><button class="btn-open" data-open="oc_1785458680255">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1785458680255">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1785458680255">Duplicar</button><button class="btn-sm del" data-anular="oc_1785458680255">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-058</span><span class="card-date">30 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">CRISTIAM JIMENEZ</div><div class="card-ref">SV12415</div><div class="card-total">Total: $7.200</div><div class="card-btns"><button class="btn-open" data-open="oc_1785421898428">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1785421898428">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1785421898428">Duplicar</button><button class="btn-sm del" data-anular="oc_1785421898428">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-057</span><span class="card-date">29 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">CARLOS BAUTISTA</div><div class="card-ref">SV12497</div><div class="card-total">Total: $330.000</div><div class="card-btns"><button class="btn-open" data-open="oc_1785365433037">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1785365433037">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1785365433037">Duplicar</button><button class="btn-sm del" data-anular="oc_1785365433037">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">TRA-018</span><span class="card-date">29 de jul de 2026</span></div><div><span class="tipo-tag tipo-TRA">TRA</span></div><div class="card-prov">CARGA SOBRE RUEDAS</div><div class="card-ref">SV12497</div><div class="card-total">Total: $1.188.000</div><div class="card-btns"><button class="btn-open" data-open="oc_1785293979649">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1785293979649">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1785293979649">Duplicar</button><button class="btn-sm del" data-anular="oc_1785293979649">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">COM-097</span><span class="card-date">27 de jul de 2026</span></div><div><span class="tipo-tag tipo-COM">COM</span></div><div class="card-prov">FERVICOM  SAS</div><div class="card-ref">SV12431-SV12497</div><div class="card-total">Total: $930.926</div><div class="card-btns"><button class="btn-open" data-open="oc_1785173735008">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1785173735008">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1785173735008">Duplicar</button><button class="btn-sm del" data-anular="oc_1785173735008">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">COM-096</span><span class="card-date">24 de jul de 2026</span></div><div><span class="tipo-tag tipo-COM">COM</span></div><div class="card-prov">EXITO CORPORACION COLOMBIANA</div><div class="card-ref">SV12192</div><div class="card-total">Total: $3.295.123</div><div class="card-btns"><button class="btn-open" data-open="oc_1784927952678">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1784927952678">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1784927952678">Duplicar</button><button class="btn-sm del" data-anular="oc_1784927952678">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">COM-095</span><span class="card-date">24 de jul de 2026</span></div><div><span class="tipo-tag tipo-COM">COM</span></div><div class="card-prov">TERALPLAS SAS</div><div class="card-ref">SV12192</div><div class="card-total">Total: $282.000</div><div class="card-btns"><button class="btn-open" data-open="oc_1784919407887">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1784919407887">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1784919407887">Duplicar</button><button class="btn-sm del" data-anular="oc_1784919407887">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">COM-094</span><span class="card-date">23 de jul de 2026</span></div><div><span class="tipo-tag tipo-COM">COM</span></div><div class="card-prov">COMERCIALIZADORA SMART LED SAS</div><div class="card-ref">SV12192</div><div class="card-total">Total: $836.946</div><div class="card-btns"><button class="btn-open" data-open="oc_1784834940490">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1784834940490">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1784834940490">Duplicar</button><button class="btn-sm del" data-anular="oc_1784834940490">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">COM-092</span><span class="card-date">23 de jul de 2026</span></div><div><span class="tipo-tag tipo-COM">COM</span></div><div class="card-prov">LAMICENTRO GALUFER Y CIA SAS</div><div class="card-ref">SV12192</div><div class="card-total">Total: $279.957</div><div class="card-btns"><button class="btn-open" data-open="oc_1784821877145">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1784821877145">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1784821877145">Duplicar</button><button class="btn-sm del" data-anular="oc_1784821877145">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-056</span><span class="card-date">23 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">ID IDUSTRIAL SAS</div><div class="card-ref">SV12192</div><div class="card-total">Total: $13.684.080</div><div class="card-btns"><button class="btn-open" data-open="oc_1784773770182">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1784773770182">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1784773770182">Duplicar</button><button class="btn-sm del" data-anular="oc_1784773770182">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-055</span><span class="card-date">22 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">ACRILICOS INFINITO SAS</div><div class="card-ref">SV12192</div><div class="card-total">Total: $2.240.768</div><div class="card-btns"><button class="btn-open" data-open="oc_1784753463966">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1784753463966">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1784753463966">Duplicar</button><button class="btn-sm del" data-anular="oc_1784753463966">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">COM-088</span><span class="card-date">22 de jul de 2026</span></div><div><span class="tipo-tag tipo-COM">COM</span></div><div class="card-prov">ACRILICOS INFINITO SAS</div><div class="card-ref">SV12192</div><div class="card-total">Total: $1.302.610</div><div class="card-btns"><button class="btn-open" data-open="oc_1784751530617">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1784751530617">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1784751530617">Duplicar</button><button class="btn-sm del" data-anular="oc_1784751530617">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">COM-087</span><span class="card-date">22 de jul de 2026</span></div><div><span class="tipo-tag tipo-COM">COM</span></div><div class="card-prov">ADH PAPELES ADHESIVOS SAS</div><div class="card-ref">SV12537</div><div class="card-total">Total: $610.676</div><div class="card-btns"><button class="btn-open" data-open="oc_1784750106155">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1784750106155">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1784750106155">Duplicar</button><button class="btn-sm del" data-anular="oc_1784750106155">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">COM-086</span><span class="card-date">22 de jul de 2026</span></div><div><span class="tipo-tag tipo-COM">COM</span></div><div class="card-prov">IDEPLAS SAS</div><div class="card-ref">SV12537</div><div class="card-total">Total: $498.012</div><div class="card-btns"><button class="btn-open" data-open="oc_1784746961720">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1784746961720">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1784746961720">Duplicar</button><button class="btn-sm del" data-anular="oc_1784746961720">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-054</span><span class="card-date">22 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">CARLOS BAUTISTA</div><div class="card-ref">SV12431</div><div class="card-total">Total: $370.000</div><div class="card-btns"><button class="btn-open" data-open="oc_1784745662728">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1784745662728">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1784745662728">Duplicar</button><button class="btn-sm del" data-anular="oc_1784745662728">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">COM-084</span><span class="card-date">21 de jul de 2026</span></div><div><span class="tipo-tag tipo-COM">COM</span></div><div class="card-prov">ACME LEON PLASTICOS SAS</div><div class="card-ref">SV12537</div><div class="card-total">Total: $743.750</div><div class="card-btns"><button class="btn-open" data-open="oc_1784672768724">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1784672768724">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1784672768724">Duplicar</button><button class="btn-sm del" data-anular="oc_1784672768724">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">COM-083</span><span class="card-date">21 de jul de 2026</span></div><div><span class="tipo-tag tipo-COM">COM</span></div><div class="card-prov">ADH PAPELES ADHESIVOS SAS</div><div class="card-ref">SV12537</div><div class="card-total">Total: $610.676</div><div class="card-btns"><button class="btn-open" data-open="oc_1784672517826">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1784672517826">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1784672517826">Duplicar</button><button class="btn-sm del" data-anular="oc_1784672517826">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-053</span><span class="card-date">21 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">CARLOS EDUARDO CAÑON SERRANO</div><div class="card-ref">SV12030</div><div class="card-total">Total: $3.302.707</div><div class="card-btns"><button class="btn-open" data-open="oc_1784671583163">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1784671583163">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1784671583163">Duplicar</button><button class="btn-sm del" data-anular="oc_1784671583163">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-052</span><span class="card-date">21 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">ID IDUSTRIAL SAS</div><div class="card-ref">SV12511</div><div class="card-total">Total: $3.763.122</div><div class="card-btns"><button class="btn-open" data-open="oc_1784670728364">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1784670728364">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1784670728364">Duplicar</button><button class="btn-sm del" data-anular="oc_1784670728364">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-051</span><span class="card-date">21 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">ID IDUSTRIAL SAS</div><div class="card-ref">SV12482</div><div class="card-total">Total: $5.245.564</div><div class="card-btns"><button class="btn-open" data-open="oc_1784669667620">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1784669667620">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1784669667620">Duplicar</button><button class="btn-sm del" data-anular="oc_1784669667620">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-050</span><span class="card-date">21 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">DAYRA MARICEL RODRIGUEZ ARIAS</div><div class="card-ref">SV12192</div><div class="card-total">Total: $2.977.088</div><div class="card-btns"><button class="btn-open" data-open="oc_1784658630146">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1784658630146">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1784658630146">Duplicar</button><button class="btn-sm del" data-anular="oc_1784658630146">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">TRA-017</span><span class="card-date">21 de jul de 2026</span></div><div><span class="tipo-tag tipo-TRA">TRA</span></div><div class="card-prov">CARGA SOBRE RUEDAS</div><div class="card-ref">SV- 12415</div><div class="card-total">Total: $292.050</div><div class="card-btns"><button class="btn-open" data-open="oc_1784658026665">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1784658026665">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1784658026665">Duplicar</button><button class="btn-sm del" data-anular="oc_1784658026665">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-049</span><span class="card-date">16 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">OPEN MIND</div><div class="card-ref">SV12231</div><div class="card-total">Total: $90.429</div><div class="card-btns"><button class="btn-open" data-open="oc_1784236899360">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1784236899360">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1784236899360">Duplicar</button><button class="btn-sm del" data-anular="oc_1784236899360">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-048</span><span class="card-date">15 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">OPEN MIND</div><div class="card-ref">SV12507</div><div class="card-total">Total: $3.757.573</div><div class="card-btns"><button class="btn-open" data-open="oc_1784150876067">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1784150876067">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1784150876067">Duplicar</button><button class="btn-sm del" data-anular="oc_1784150876067">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-047</span><span class="card-date">12 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">FUSION D SAS</div><div class="card-ref">SV12192</div><div class="card-total">Total: $14.282.759</div><div class="card-btns"><button class="btn-open" data-open="oc_1783814983642">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783814983642">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783814983642">Duplicar</button><button class="btn-sm del" data-anular="oc_1783814983642">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">COM-074</span><span class="card-date">11 de jul de 2026</span></div><div><span class="tipo-tag tipo-COM">COM</span></div><div class="card-prov">ENERGIA DEL FUTURO Y REDES SAS</div><div class="card-ref">SV12396</div><div class="card-total">Total: $484.857</div><div class="card-btns"><button class="btn-open" data-open="oc_1783814015690">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783814015690">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783814015690">Duplicar</button><button class="btn-sm del" data-anular="oc_1783814015690">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-046</span><span class="card-date">10 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">FORUM CNC SAS</div><div class="card-ref">MANTENIMIENTO MAQUINA LASER</div><div class="card-total">Total: $718.414</div><div class="card-btns"><button class="btn-open" data-open="oc_1783724675080">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783724675080">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783724675080">Duplicar</button><button class="btn-sm del" data-anular="oc_1783724675080">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">COM-072</span><span class="card-date">10 de jul de 2026</span></div><div><span class="tipo-tag tipo-COM">COM</span></div><div class="card-prov">TRIPLEX Y FERRETERIA GONZALEZ SAS</div><div class="card-ref">SV12413-SV12415-SV12396</div><div class="card-total">Total: $150.000</div><div class="card-btns"><button class="btn-open" data-open="oc_1783714494332">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783714494332">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783714494332">Duplicar</button><button class="btn-sm del" data-anular="oc_1783714494332">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">COM-071</span><span class="card-date">10 de jul de 2026</span></div><div><span class="tipo-tag tipo-COM">COM</span></div><div class="card-prov">TROQUELES AMERICA SAS</div><div class="card-ref">SV12396-SV12413-SV12415</div><div class="card-total">Total: $4.583.469</div><div class="card-btns"><button class="btn-open" data-open="oc_1783713188662">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783713188662">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783713188662">Duplicar</button><button class="btn-sm del" data-anular="oc_1783713188662">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">COM-070</span><span class="card-date">10 de jul de 2026</span></div><div><span class="tipo-tag tipo-COM">COM</span></div><div class="card-prov">ECG ELECTRONICS COMERCIALIZADORA SAS</div><div class="card-ref">SV12396-SV12231</div><div class="card-total">Total: $626.423</div><div class="card-btns"><button class="btn-open" data-open="oc_1783712004686">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783712004686">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783712004686">Duplicar</button><button class="btn-sm del" data-anular="oc_1783712004686">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">COM-069</span><span class="card-date">10 de jul de 2026</span></div><div><span class="tipo-tag tipo-COM">COM</span></div><div class="card-prov">COMERCIALIZADORA SMART LED SAS</div><div class="card-ref">SV12396-SV12231-SV12192-SV12497-SV12346</div><div class="card-total">Total: $5.368.903</div><div class="card-btns"><button class="btn-open" data-open="oc_1783709514472">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783709514472">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783709514472">Duplicar</button><button class="btn-sm del" data-anular="oc_1783709514472">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">COM-067</span><span class="card-date">10 de jul de 2026</span></div><div><span class="tipo-tag tipo-COM">COM</span></div><div class="card-prov">LAMICENTRO GALUFER Y CIA SAS</div><div class="card-ref">SV12192-SV12431-SV12497</div><div class="card-total">Total: $588.622</div><div class="card-btns"><button class="btn-open" data-open="oc_1783707513161">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783707513161">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783707513161">Duplicar</button><button class="btn-sm del" data-anular="oc_1783707513161">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">COM-066</span><span class="card-date">10 de jul de 2026</span></div><div><span class="tipo-tag tipo-COM">COM</span></div><div class="card-prov">FERRELUGUE SAS</div><div class="card-ref">SV-12497</div><div class="card-total">Total: $102.438</div><div class="card-btns"><button class="btn-open" data-open="oc_1783706215440">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783706215440">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783706215440">Duplicar</button><button class="btn-sm del" data-anular="oc_1783706215440">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-045</span><span class="card-date">10 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">SOPORTE PARA LA INDUSTRIA SAS</div><div class="card-ref">MAQUINAS</div><div class="card-total">Total: $638.590</div><div class="card-btns"><button class="btn-open" data-open="oc_1783704323240">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783704323240">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783704323240">Duplicar</button><button class="btn-sm del" data-anular="oc_1783704323240">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">COM-064</span><span class="card-date">10 de jul de 2026</span></div><div><span class="tipo-tag tipo-COM">COM</span></div><div class="card-prov">ACRILICOS INFINITO SAS</div><div class="card-ref">SV12231 - SV12346 - SV12192 - SV12431 - SV12497</div><div class="card-total">Total: $1.790.509</div><div class="card-btns"><button class="btn-open" data-open="oc_1783701892810">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783701892810">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783701892810">Duplicar</button><button class="btn-sm del" data-anular="oc_1783701892810">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">COM-063</span><span class="card-date">10 de jul de 2026</span></div><div><span class="tipo-tag tipo-COM">COM</span></div><div class="card-prov">IDEPLAS SAS</div><div class="card-ref">SV12192 - SV12497</div><div class="card-total">Total: $1.576.291</div><div class="card-btns"><button class="btn-open" data-open="oc_1783700168317">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783700168317">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783700168317">Duplicar</button><button class="btn-sm del" data-anular="oc_1783700168317">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">COM-061</span><span class="card-date">10 de jul de 2026</span></div><div><span class="tipo-tag tipo-COM">COM</span></div><div class="card-prov">IDEPLAS SAS</div><div class="card-ref">SV12396-SV12413-SV12415</div><div class="card-total">Total: $8.398.737</div><div class="card-btns"><button class="btn-open" data-open="oc_1783694767338">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783694767338">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783694767338">Duplicar</button><button class="btn-sm del" data-anular="oc_1783694767338">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">COM-060</span><span class="card-date">10 de jul de 2026</span></div><div><span class="tipo-tag tipo-COM">COM</span></div><div class="card-prov">ENERGIA DEL FUTURO Y REDES SAS</div><div class="card-ref">SV12396</div><div class="card-total">Total: $3.258.236</div><div class="card-btns"><button class="btn-open" data-open="oc_1783694171909">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783694171909">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783694171909">Duplicar</button><button class="btn-sm del" data-anular="oc_1783694171909">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">COM-058</span><span class="card-date">10 de jul de 2026</span></div><div><span class="tipo-tag tipo-COM">COM</span></div><div class="card-prov">MULTISUMINISTROS INDUSTRIALES</div><div class="card-ref">SV-12231, SV-12346, SV12396, SV12413,SV12415</div><div class="card-total">Total: $1.083.733</div><div class="card-btns"><button class="btn-open" data-open="oc_1783652222296">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783652222296">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783652222296">Duplicar</button><button class="btn-sm del" data-anular="oc_1783652222296">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-044</span><span class="card-date">07 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">ID INDUSTRIAL SAS</div><div class="card-ref">SV12192</div><div class="card-total">Total: $17.162.117</div><div class="card-btns"><button class="btn-open" data-open="oc_1783437382372">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783437382372">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783437382372">Duplicar</button><button class="btn-sm del" data-anular="oc_1783437382372">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-043</span><span class="card-date">06 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">JONATHAN ALBERTO GODOY CASTRILLON</div><div class="card-ref">SV12431</div><div class="card-total">Total: $1.655.774</div><div class="card-btns"><button class="btn-open" data-open="oc_1783353374636">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783353374636">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783353374636">Duplicar</button><button class="btn-sm del" data-anular="oc_1783353374636">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-042</span><span class="card-date">06 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">ACRILICOS INFINITO SAS</div><div class="card-ref">SV12431</div><div class="card-total">Total: $3.078.918</div><div class="card-btns"><button class="btn-open" data-open="oc_1783352633173">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783352633173">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783352633173">Duplicar</button><button class="btn-sm del" data-anular="oc_1783352633173">Anular</button></div></div><div class="card" style="border-color:rgba(255,77,46,.4);opacity:.75"><div class="card-top"><span class="card-num">SER-041</span><span class="card-date">04 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span> <span style="font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--coral);font-weight:700">· ANULADA</span></div><div class="card-prov">D2D+ MAS DISEÑO ESPACIO SAS</div><div class="card-ref">SV12192</div><div class="card-total">Total: $16.799.489</div><div style="font-size:.62rem;color:var(--coral);margin-bottom:.4rem">✗ este proyecto sale más economico con otro proveedor</div><div class="card-btns"><button class="btn-open" data-open="oc_1783186392103">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783186392103">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783186392103">Duplicar</button><span style="font-size:.58rem;color:var(--coral);letter-spacing:.08em;text-transform:uppercase;padding:.38rem .4rem">ANULADA</span></div></div><div class="card"><div class="card-top"><span class="card-num">SER-040</span><span class="card-date">03 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">OPEN MIND</div><div class="card-ref">SV-11924 </div><div class="card-total">Total: $95.620</div><div class="card-btns"><button class="btn-open" data-open="oc_1783109668931">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783109668931">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783109668931">Duplicar</button><button class="btn-sm del" data-anular="oc_1783109668931">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-039</span><span class="card-date">03 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">OPEN MIND</div><div class="card-ref">SV-11676</div><div class="card-total">Total: $95.620</div><div class="card-btns"><button class="btn-open" data-open="oc_1783109539475">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783109539475">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783109539475">Duplicar</button><button class="btn-sm del" data-anular="oc_1783109539475">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-038</span><span class="card-date">03 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">OPEN MIND</div><div class="card-ref">SV-12277</div><div class="card-total">Total: $93.845</div><div class="card-btns"><button class="btn-open" data-open="oc_1783109445907">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783109445907">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783109445907">Duplicar</button><button class="btn-sm del" data-anular="oc_1783109445907">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-037</span><span class="card-date">03 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">OPEN MIND</div><div class="card-ref">SV-12201</div><div class="card-total">Total: $896.581</div><div class="card-btns"><button class="btn-open" data-open="oc_1783109330963">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783109330963">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783109330963">Duplicar</button><button class="btn-sm del" data-anular="oc_1783109330963">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-036</span><span class="card-date">03 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">OPEN MIND</div><div class="card-ref">SV-12277</div><div class="card-total">Total: $1.192.308</div><div class="card-btns"><button class="btn-open" data-open="oc_1783109166921">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783109166921">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783109166921">Duplicar</button><button class="btn-sm del" data-anular="oc_1783109166921">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-035</span><span class="card-date">03 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">OPEN MIND</div><div class="card-ref">SV-12378</div><div class="card-total">Total: $58.910</div><div class="card-btns"><button class="btn-open" data-open="oc_1783109010984">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783109010984">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783109010984">Duplicar</button><button class="btn-sm del" data-anular="oc_1783109010984">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-034</span><span class="card-date">03 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">OPEN MIND</div><div class="card-ref">SV- 12221</div><div class="card-total">Total: $1.921.245</div><div class="card-btns"><button class="btn-open" data-open="oc_1783108896330">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783108896330">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783108896330">Duplicar</button><button class="btn-sm del" data-anular="oc_1783108896330">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-033</span><span class="card-date">03 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">OPEN MIND</div><div class="card-ref">SV-12208</div><div class="card-total">Total: $274.229</div><div class="card-btns"><button class="btn-open" data-open="oc_1783108776066">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783108776066">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783108776066">Duplicar</button><button class="btn-sm del" data-anular="oc_1783108776066">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-032</span><span class="card-date">03 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">OPEN MIND</div><div class="card-ref">SV-12277</div><div class="card-total">Total: $170.244</div><div class="card-btns"><button class="btn-open" data-open="oc_1783108625897">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783108625897">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783108625897">Duplicar</button><button class="btn-sm del" data-anular="oc_1783108625897">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-031</span><span class="card-date">03 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">OPEN MIND</div><div class="card-ref">SV-12208</div><div class="card-total">Total: $2.217.437</div><div class="card-btns"><button class="btn-open" data-open="oc_1783108502596">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783108502596">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783108502596">Duplicar</button><button class="btn-sm del" data-anular="oc_1783108502596">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-030</span><span class="card-date">03 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">OPEN MIND</div><div class="card-ref">SV-12277</div><div class="card-total">Total: $38.794</div><div class="card-btns"><button class="btn-open" data-open="oc_1783108137399">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783108137399">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783108137399">Duplicar</button><button class="btn-sm del" data-anular="oc_1783108137399">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-029</span><span class="card-date">02 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">OPEN MIND</div><div class="card-ref">SV12231</div><div class="card-total">Total: $83.461</div><div class="card-btns"><button class="btn-open" data-open="oc_1783029734445">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783029734445">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783029734445">Duplicar</button><button class="btn-sm del" data-anular="oc_1783029734445">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">TRA-015</span><span class="card-date">02 de jul de 2026</span></div><div><span class="tipo-tag tipo-TRA">TRA</span></div><div class="card-prov">CARGA SOBRE RUEDAS</div><div class="card-ref">SV12355</div><div class="card-total">Total: $510.246</div><div class="card-btns"><button class="btn-open" data-open="oc_1783019764962">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1783019764962">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1783019764962">Duplicar</button><button class="btn-sm del" data-anular="oc_1783019764962">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-028</span><span class="card-date">01 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">ACERMETALICAS</div><div class="card-ref">SV12192</div><div class="card-total">Total: $12.681.949</div><div class="card-btns"><button class="btn-open" data-open="oc_1782931993163">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1782931993163">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1782931993163">Duplicar</button><button class="btn-sm del" data-anular="oc_1782931993163">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-027</span><span class="card-date">01 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">CRISTIAM JIMENEZ</div><div class="card-ref">SV11676</div><div class="card-total">Total: $334.697</div><div class="card-btns"><button class="btn-open" data-open="oc_1782925975863">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1782925975863">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1782925975863">Duplicar</button><button class="btn-sm del" data-anular="oc_1782925975863">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-026</span><span class="card-date">01 de jul de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">ID DISEÑO DE EXHIBICIÓN</div><div class="card-ref">SV12360</div><div class="card-total">Total: $13.284.961</div><div class="card-btns"><button class="btn-open" data-open="oc_1782919668964">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1782919668964">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1782919668964">Duplicar</button><button class="btn-sm del" data-anular="oc_1782919668964">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-025</span><span class="card-date">29 de jun de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">ACERMETALICAS</div><div class="card-ref">SV12396</div><div class="card-total">Total: $147.258.946</div><div class="card-btns"><button class="btn-open" data-open="oc_1782848928061">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1782848928061">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1782848928061">Duplicar</button><button class="btn-sm del" data-anular="oc_1782848928061">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-024</span><span class="card-date">28 de jun de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">JONATHAN ALBERTO GODOY CASTRILLON</div><div class="card-ref">SV12346</div><div class="card-total">Total: $491.487</div><div class="card-btns"><button class="btn-open" data-open="oc_1782657274567">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1782657274567">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1782657274567">Duplicar</button><button class="btn-sm del" data-anular="oc_1782657274567">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-023</span><span class="card-date">27 de jun de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">ACERMETALICAS</div><div class="card-ref">SV11924</div><div class="card-total">Total: $2.598.379</div><div class="card-btns"><button class="btn-open" data-open="oc_1782581814516">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1782581814516">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1782581814516">Duplicar</button><button class="btn-sm del" data-anular="oc_1782581814516">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-022</span><span class="card-date">27 de jun de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">OPEN MIND</div><div class="card-ref">SV12405</div><div class="card-total">Total: $116.771</div><div class="card-btns"><button class="btn-open" data-open="oc_1782575456075">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1782575456075">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1782575456075">Duplicar</button><button class="btn-sm del" data-anular="oc_1782575456075">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-021</span><span class="card-date">27 de jun de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">OPEN MIND</div><div class="card-ref">SV12507</div><div class="card-total">Total: $779.952</div><div class="card-btns"><button class="btn-open" data-open="oc_1782573258219">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1782573258219">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1782573258219">Duplicar</button><button class="btn-sm del" data-anular="oc_1782573258219">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-020</span><span class="card-date">25 de jun de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">Sin proveedor</div><div class="card-ref"></div><div class="card-total">Total: $0</div><div class="card-btns"><button class="btn-open" data-open="oc_1782421802119">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1782421802119">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1782421802119">Duplicar</button><button class="btn-sm del" data-anular="oc_1782421802119">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-019</span><span class="card-date">24 de jun de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">CRISTIAM JIMENEZ</div><div class="card-ref">SV12404</div><div class="card-total">Total: $500.000</div><div class="card-btns"><button class="btn-open" data-open="oc_1782335671987">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1782335671987">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1782335671987">Duplicar</button><button class="btn-sm del" data-anular="oc_1782335671987">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-018</span><span class="card-date">24 de jun de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">CRISTIAM JIMENEZ</div><div class="card-ref">SV12404</div><div class="card-total">Total: $400.001</div><div class="card-btns"><button class="btn-open" data-open="oc_1782335569691">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1782335569691">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1782335569691">Duplicar</button><button class="btn-sm del" data-anular="oc_1782335569691">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-017</span><span class="card-date">24 de jun de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">CRISTIAM JIMENEZ</div><div class="card-ref">SV12355</div><div class="card-total">Total: $1.020.001</div><div class="card-btns"><button class="btn-open" data-open="oc_1782333800498">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1782333800498">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1782333800498">Duplicar</button><button class="btn-sm del" data-anular="oc_1782333800498">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">LOG-022</span><span class="card-date">22 de jun de 2026</span></div><div><span class="tipo-tag tipo-LOG">LOG</span></div><div class="card-prov">CRISTIAN PUERTA</div><div class="card-ref">COTIZACION 17</div><div class="card-total">Total: $958.250</div><div class="card-btns"><button class="btn-open" data-open="oc_1782154146595">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1782154146595">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1782154146595">Duplicar</button><button class="btn-sm del" data-anular="oc_1782154146595">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">LOG-021</span><span class="card-date">22 de jun de 2026</span></div><div><span class="tipo-tag tipo-LOG">LOG</span></div><div class="card-prov">CRISTIAN PUERTA</div><div class="card-ref">COTIZACION 18</div><div class="card-total">Total: $1.209.442</div><div class="card-btns"><button class="btn-open" data-open="oc_1782154052693">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1782154052693">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1782154052693">Duplicar</button><button class="btn-sm del" data-anular="oc_1782154052693">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">LOG-020</span><span class="card-date">22 de jun de 2026</span></div><div><span class="tipo-tag tipo-LOG">LOG</span></div><div class="card-prov">CRISTIAN PUERTA</div><div class="card-ref">COTIZACION 16</div><div class="card-total">Total: $837.306</div><div class="card-btns"><button class="btn-open" data-open="oc_1782153937083">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1782153937083">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1782153937083">Duplicar</button><button class="btn-sm del" data-anular="oc_1782153937083">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">LOG-019</span><span class="card-date">22 de jun de 2026</span></div><div><span class="tipo-tag tipo-LOG">LOG</span></div><div class="card-prov">CRISTIAN PUERTA</div><div class="card-ref">COTIZACION 15</div><div class="card-total">Total: $2.046.748</div><div class="card-btns"><button class="btn-open" data-open="oc_1782153619285">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1782153619285">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1782153619285">Duplicar</button><button class="btn-sm del" data-anular="oc_1782153619285">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">LOG-018</span><span class="card-date">22 de jun de 2026</span></div><div><span class="tipo-tag tipo-LOG">LOG</span></div><div class="card-prov">CRISTIAN PUERTA</div><div class="card-ref">COTIZACION 11A</div><div class="card-total">Total: $930.340</div><div class="card-btns"><button class="btn-open" data-open="oc_1782153517462">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1782153517462">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1782153517462">Duplicar</button><button class="btn-sm del" data-anular="oc_1782153517462">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">LOG-017</span><span class="card-date">22 de jun de 2026</span></div><div><span class="tipo-tag tipo-LOG">LOG</span></div><div class="card-prov">CRISTIAN PUERTA</div><div class="card-ref">COTIZACION 12A</div><div class="card-total">Total: $855.913</div><div class="card-btns"><button class="btn-open" data-open="oc_1782153365301">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1782153365301">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1782153365301">Duplicar</button><button class="btn-sm del" data-anular="oc_1782153365301">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">LOG-016</span><span class="card-date">22 de jun de 2026</span></div><div><span class="tipo-tag tipo-LOG">LOG</span></div><div class="card-prov">CRISTIAN PUERTA</div><div class="card-ref">COTIZACION 13A</div><div class="card-total">Total: $837.306</div><div class="card-btns"><button class="btn-open" data-open="oc_1782153183827">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1782153183827">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1782153183827">Duplicar</button><button class="btn-sm del" data-anular="oc_1782153183827">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">LOG-015</span><span class="card-date">19 de jun de 2026</span></div><div><span class="tipo-tag tipo-LOG">LOG</span></div><div class="card-prov">CRISTIAN PUERTA</div><div class="card-ref">COTIZACION 14A</div><div class="card-total">Total: $1.032.677</div><div class="card-btns"><button class="btn-open" data-open="oc_1781907778347">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1781907778347">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1781907778347">Duplicar</button><button class="btn-sm del" data-anular="oc_1781907778347">Anular</button></div></div><div class="card"><div class="card-top"><span class="card-num">SER-016</span><span class="card-date">19 de jun de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span></div><div class="card-prov">D2D+ MAS DISEÑO ESPACIO SAS</div><div class="card-ref">SV12477</div><div class="card-total">Total: $38.265.713</div><div class="card-btns"><button class="btn-open" data-open="oc_1781899758897">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1781899758897">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1781899758897">Duplicar</button><button class="btn-sm del" data-anular="oc_1781899758897">Anular</button></div></div><div class="card" style="border-color:rgba(255,77,46,.4);opacity:.75"><div class="card-top"><span class="card-num">SER-015</span><span class="card-date">19 de jun de 2026</span></div><div><span class="tipo-tag tipo-SER">SER</span> <span style="font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--coral);font-weight:700">· ANULADA</span></div><div class="card-prov">Sin proveedor</div><div class="card-ref">SV12477</div><div class="card-total">Total: $0</div><div style="font-size:.62rem;color:var(--coral);margin-bottom:.4rem">✗ prueba</div><div class="card-btns"><button class="btn-open" data-open="oc_1781896881970">Abrir / Editar</button><button class="btn-sm" data-pdf="oc_1781896881970">PDF</button><button class="btn-sm btn-dup" data-dup="oc_1781896881970">Duplicar</button><span style="font-size:.58rem;color:var(--coral);letter-spacing:.08em;text-transform:uppercase;padding:.38rem .4rem">ANULADA</span></div></div></div>
 </div>
 
 <!-- FORMULARIO -->
@@ -230,7 +260,7 @@ input,select,textarea{font-family:inherit;outline:none}
         <div class="g2" style="margin-bottom:.7rem">
           <div class="f"><label>Nombre / Razón social</label>
             <input class="inp" id="f-prov" list="dl-provs" placeholder="Escribe o selecciona..." autocomplete="off">
-            <datalist id="dl-provs"><option value="D2D+ MAS DISEÑO ESPACIO SAS"></option><option value="CRISTIAN PUERTA"></option></datalist>
+            <datalist id="dl-provs"><option value="D2D+ MAS DISEÑO ESPACIO SAS"></option><option value="CRISTIAN PUERTA"></option><option value="CRISTIAM JIMENEZ"></option><option value="OPEN MIND"></option><option value="ACERMETALICAS"></option><option value="JONATHAN ALBERTO GODOY CASTRILLON"></option><option value="MULTISUMINISTROS INDUSTRIALES"></option><option value="IDEPLAS SAS"></option><option value="ACRILICOS INFINITO SAS"></option><option value="FERRELUGUE SAS"></option><option value="LAMICENTRO GALUFER Y CIA SAS"></option><option value="COMERCIALIZADORA SMART LED SAS"></option><option value="ECG ELECTRONICS COMERCIALIZADORA SAS"></option><option value="TROQUELES AMERICA SAS"></option><option value="TRIPLEX Y FERRETERIA GONZALEZ SAS"></option><option value="FORUM CNC SAS"></option><option value="ENERGIA DEL FUTURO Y REDES SAS"></option><option value="FUSION D SAS"></option><option value="CARGA SOBRE RUEDAS"></option><option value="DAYRA MARICEL RODRIGUEZ ARIAS"></option><option value="ID IDUSTRIAL SAS"></option><option value="CARLOS EDUARDO CAÑON SERRANO"></option><option value="ADH PAPELES ADHESIVOS SAS"></option><option value="ACME LEON PLASTICOS SAS"></option><option value="CARLOS BAUTISTA"></option><option value="TERALPLAS SAS"></option><option value="EXITO CORPORACION COLOMBIANA"></option></datalist>
             <div id="prov-ok" style="display:none;font-size:.6rem;color:var(--green);margin-top:.25rem">✓ En directorio · <button id="btn-act-prov" style="background:none;border:none;color:var(--green);font-size:.6rem;text-decoration:underline;cursor:pointer">Actualizar</button></div>
           </div>
           <div class="f"><label>NIT / C.C.</label><input class="inp" id="f-nit" placeholder="901416818-2"></div>
@@ -257,6 +287,7 @@ input,select,textarea{font-family:inherit;outline:none}
         <table class="itbl">
           <thead><tr>
             <th style="width:30px">#</th>
+            <th style="width:130px">Código</th>
             <th>Descripción</th>
             <th style="width:70px" class="r">Cant.</th>
             <th style="width:65px">Unidad</th>
@@ -266,9 +297,15 @@ input,select,textarea{font-family:inherit;outline:none}
           </tr></thead>
           <tbody id="itbody"></tbody>
         </table>
+        <datalist id="dl-proyectos"></datalist>
         <div class="row-btns">
           <button class="btn-add" id="btn-add-row">+ Agregar ítem</button>
           <button class="btn-imp" id="btn-importar">↗ Importar desde cotización</button>
+        </div>
+        <div class="row-btns" style="margin-top:.5rem">
+          <button class="btn-cp" id="btn-copiar-items">⎘ Copiar ítems</button>
+          <button class="btn-cp" id="btn-pegar-items">⎗ Pegar ítems</button>
+          <button class="btn-cp" id="btn-aplicar-ref" title="Pregunta un código y lo aplica a todos los ítems de esta orden — útil para completar órdenes anteriores">⤵ Aplicar un código a todos los ítems</button>
         </div>
       </div>
     </div>
@@ -355,9 +392,76 @@ input,select,textarea{font-family:inherit;outline:none}
         </label>
         <span style="font-size:.62rem;color:var(--dim)">El backup se actualiza automáticamente cada vez que guardas o anulas una orden.</span>
       </div>
-      <div id="backup-list"><div style="display:flex;align-items:center;gap:.6rem;padding:.55rem .7rem;border:1px solid var(--brd2);background:rgba(74,222,128,.05)"><div style="flex:1"><div style="font-size:.75rem;font-weight:600;color:var(--green)">✓ Backup automático</div><div style="font-size:.65rem;color:var(--mid)">23 de jun de 2026, 07:34 p. m. · 10 órdenes · 2 proveedores</div></div><button class="btn-sm" id="btn-dl-bk">↓ Descargar</button><button class="btn-sm" id="btn-restore-bk">↺ Restaurar</button></div></div>
+      <div id="backup-list"><div style="display:flex;align-items:center;gap:.6rem;padding:.55rem .7rem;border:1px solid var(--brd2);background:rgba(74,222,128,.05)"><div style="flex:1"><div style="font-size:.75rem;font-weight:600;color:var(--green)">✓ Backup automático</div><div style="font-size:.65rem;color:var(--mid)">31 de jul de 2026, 08:08 p. m. · 84 órdenes · 27 proveedores</div></div><button class="btn-sm" id="btn-dl-bk">↓ Descargar</button><button class="btn-sm" id="btn-restore-bk">↺ Restaurar</button></div></div>
     </div>
   </div>
+</div>
+
+<!-- CONTROL DE PROYECTOS -->
+<div class="page" id="page-proj">
+  <div class="toolbar">
+    <input class="srch" id="srch-proj" placeholder="Buscar proyecto...">
+    <select class="sel" id="proj-mes" style="max-width:230px"><option value="">Costos: todo (acumulado)</option></select>
+    <button class="btn-new" id="btn-cargar-gasto" style="white-space:nowrap">＋ Cargar gasto de caja menor</button>
+    <button class="btn-xls" id="btn-proj-xls" style="padding:.48rem 1rem">↓ Exportar Excel</button>
+  </div>
+  <div class="fbars" id="proj-fbar">
+    <button class="fb on" data-ps="ALL">Todos</button>
+    <button class="fb" data-ps="proceso">🟡 En proceso</button>
+    <button class="fb" data-ps="finalizado">✅ Finalizados</button>
+  </div>
+  <div id="proj-pending"></div>
+  <div class="proj-summary" id="proj-summary"></div>
+  <div style="font-size:.62rem;color:var(--dim);margin-bottom:.9rem;line-height:1.5">
+    Consolida los costos por proyecto de las órdenes activas (excepto Oficina). Base: valor de ítems (cantidad × valor
+    unitario, sin IVA). Puedes además cargar a un proyecto gastos que no pasan por orden de compra —como la legalización
+    de caja menor— con el botón "Cargar gasto de caja menor" o desde cada tarjeta.
+  </div>
+  <div id="proj-list"></div>
+</div>
+
+<!-- CONTROL DE OFICINA -->
+<div class="page" id="page-ofi">
+  <div class="toolbar">
+    <input class="srch" id="srch-ofi" placeholder="Buscar rubro de oficina...">
+    <button class="btn-xls" id="btn-ofi-xls" style="padding:.48rem 1rem">↓ Exportar Excel</button>
+  </div>
+  <div class="fbars" id="ofi-fbar">
+    <button class="fb on" data-ps="ALL">Todos</button>
+    <button class="fb" data-ps="proceso">🟡 En proceso</button>
+    <button class="fb" data-ps="finalizado">✅ Finalizados</button>
+  </div>
+  <div id="ofi-pending"></div>
+  <div class="proj-summary" id="ofi-summary"></div>
+  <div style="font-size:.62rem;color:var(--dim);margin-bottom:.9rem;line-height:1.5">
+    Consolida únicamente las órdenes de tipo OFI · Oficina (mantenimiento, papelería, etc.), agrupadas por código.
+    Base: valor de ítems (cantidad × valor unitario, sin IVA). Excluye órdenes anuladas.
+  </div>
+  <div id="ofi-list"></div>
+</div>
+
+<!-- CUENTAS POR PAGAR -->
+<div class="page" id="page-pagar">
+  <div class="toolbar">
+    <input class="srch" id="srch-pagar" placeholder="Buscar proveedor, orden o proyecto...">
+    <button class="btn-xls" id="btn-pagar-xls" style="padding:.48rem 1rem">↓ Exportar Excel</button>
+  </div>
+  <div class="fbars" id="pagar-fbar">
+    <button class="fb on" data-pf="PEND">Pendientes</button>
+    <button class="fb" data-pf="VENC">🔴 Vencidas</button>
+    <button class="fb" data-pf="CRED">A crédito</button>
+    <button class="fb" data-pf="ANT">Con anticipo</button>
+    <button class="fb" data-pf="PAG">Pagadas</button>
+    <button class="fb" data-pf="ALL">Todas</button>
+  </div>
+  <div class="proj-summary" id="pagar-summary"></div>
+  <div style="font-size:.62rem;color:var(--dim);margin-bottom:.9rem;line-height:1.5">
+    Muestra el saldo por pagar de cada orden activa. El vencimiento se calcula desde la fecha de emisión según la
+    forma de pago (Contado = mismo día; 30/45/60 días = emisión + esos días; Anticipo + contraentrega = fecha de
+    entrega). Marca cada orden como "Anticipo girado" (queda pendiente solo el saldo) o "Pagado" para sacarla de la
+    lista. Lo vencido se resalta en rojo.
+  </div>
+  <div id="pagar-list"></div>
 </div>
 
 <!-- MODAL -->
@@ -385,6 +489,33 @@ input,select,textarea{font-family:inherit;outline:none}
     <div class="mbtns">
       <button class="mcancel" id="btn-modal-cancel">Cancelar</button>
       <button class="mok" id="btn-modal-ok">Importar seleccionados</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CARGO CAJA MENOR -->
+<div class="mover" id="modal-cargo">
+  <div class="mbox">
+    <div class="mtitle">Cargar gasto a proyecto</div>
+    <div class="f" style="margin-bottom:.7rem">
+      <label>Proyecto (código)</label>
+      <input class="inp" id="cargo-proj" list="dl-proyectos" placeholder="Ej: SV-12477" autocomplete="off">
+    </div>
+    <div class="f" style="margin-bottom:.7rem">
+      <label>Concepto</label>
+      <input class="inp" id="cargo-concepto" value="GASTOS X CAJA MENOR">
+    </div>
+    <div class="g2" style="margin-bottom:.7rem">
+      <div class="f"><label>Valor (COP)</label><input class="inp" id="cargo-valor" type="number" min="0" placeholder="0"></div>
+      <div class="f"><label>Fecha</label><input class="inp" id="cargo-fecha" type="date"></div>
+    </div>
+    <div class="f" style="margin-bottom:.7rem">
+      <label>Nota (opcional)</label>
+      <input class="inp" id="cargo-nota" placeholder="Ej: legalización caja menor mayo">
+    </div>
+    <div class="mbtns">
+      <button class="mcancel" id="btn-cargo-cancel">Cancelar</button>
+      <button class="mok" id="btn-cargo-ok">Guardar gasto</button>
     </div>
   </div>
 </div>
@@ -678,6 +809,9 @@ function showPage(id){
   var tab=document.getElementById('tab-'+id);
   if(tab) tab.classList.add('on');
   if(id==='hist') renderHist();
+  if(id==='proj') renderProyectos('PROY');
+  if(id==='ofi') renderProyectos('OFI');
+  if(id==='pagar') renderPagar();
   if(id==='cfg'){ loadCFGForm(); renderProvDir(); renderBackups(); }
 }
 
@@ -696,7 +830,7 @@ function setTipo(t){
 
 function renderHist(){
   var q=(document.getElementById('srch').value||'').toLowerCase();
-  var list=getOrdenes().sort(function(a,b){ return b.createdAt-a.createdAt; });
+  var list=getOrdenes().filter(function(o){ return !o.esCargo && !o.esMeta; }).sort(function(a,b){ return b.createdAt-a.createdAt; });
   if(filtro!=='ALL') list=list.filter(function(o){ return o.tipo===filtro; });
   if(q) list=list.filter(function(o){
     return (o.prov||'').toLowerCase().includes(q)||(o.num||'').toLowerCase().includes(q)||(o.svref||'').toLowerCase().includes(q);
@@ -716,6 +850,7 @@ function renderHist(){
       +'<div class="card-btns">'
       +'<button class="btn-open" data-open="'+o.id+'">Abrir / Editar</button>'
       +'<button class="btn-sm" data-pdf="'+o.id+'">PDF</button>'
+      +'<button class="btn-sm btn-dup" data-dup="'+o.id+'">Duplicar</button>'
       +(o.anulada?'<span style="font-size:.58rem;color:var(--coral);letter-spacing:.08em;text-transform:uppercase;padding:.38rem .4rem">ANULADA</span>':'<button class="btn-sm del" data-anular="'+o.id+'">Anular</button>')
       +'</div></div>';
   }).join('');
@@ -728,6 +863,9 @@ function renderHist(){
   });
   g.querySelectorAll('[data-anular]').forEach(function(btn){
     btn.addEventListener('click',function(){ anularOC(btn.getAttribute('data-anular')); });
+  });
+  g.querySelectorAll('[data-dup]').forEach(function(btn){
+    btn.addEventListener('click',function(){ duplicarOC(btn.getAttribute('data-dup')); });
   });
 }
 
@@ -769,7 +907,7 @@ function nuevaOC(){
       obs:'', iva:19, desc:0, rete:4, rica:0.966,
       total:0, createdAt:Date.now(), updatedAt:Date.now()
     };
-    rows=[{desc:'',cant:1,unit:'Unidad',vru:0}];
+    rows=[{desc:'',cant:1,unit:'Unidad',vru:0,proyecto:''}];
     showForm();
   });
 }
@@ -807,6 +945,8 @@ function showForm(){
   document.getElementById('f-desc').value=oc.desc!=null?oc.desc:0;
   document.getElementById('f-obs').value=oc.obs||'';
   document.getElementById('prov-ok').style.display='none';
+  updateProyectosDL();
+  actualizarBtnPegar();
   renderRows();
   recalc();
   setSaveLbl('Sin cambios');
@@ -858,6 +998,7 @@ function renderRows(){
   rows.forEach(function(r,i){
     var tr=document.createElement('tr');
     tr.innerHTML='<td class="tc">'+(i+1)+'</td>'
+      +'<td><input class="ti" data-field="proyecto" data-i="'+i+'" list="dl-proyectos" value="'+esc(r.proyecto||'')+'" placeholder="—" style="width:120px"></td>'
       +'<td><input class="ti" data-field="desc" data-i="'+i+'" value="'+esc(r.desc||'')+'"></td>'
       +'<td><input class="ti r" data-field="cant" data-i="'+i+'" type="number" min="0" value="'+(r.cant||1)+'" style="width:60px"></td>'
       +'<td><input class="ti" data-field="unit" data-i="'+i+'" value="'+esc(r.unit||'Unidad')+'" style="width:60px"></td>'
@@ -884,8 +1025,100 @@ function renderRows(){
 }
 
 function addRow(){
-  rows.push({desc:'',cant:1,unit:'Unidad',vru:0});
+  var ult = rows.length ? (rows[rows.length-1].proyecto||'') : '';
+  var pref = ult || (document.getElementById('f-svref')&&document.getElementById('f-svref').value) || '';
+  rows.push({desc:'',cant:1,unit:'Unidad',vru:0,proyecto:pref});
   renderRows(); schedSave();
+}
+
+// ── COPIAR / PEGAR ÍTEMS ──
+function getClipboardItems(){ try{ return JSON.parse(localStorage.getItem('soc_clip_items')||'null'); }catch(e){ return null; } }
+function setClipboardItems(list){ try{ localStorage.setItem('soc_clip_items',JSON.stringify(list)); }catch(e){} }
+
+function copiarItems(){
+  if(!rows||!rows.length){ toast('No hay ítems para copiar'); return; }
+  // Guardamos una copia limpia de los ítems actuales (con su proyecto)
+  var copia=rows.map(function(r){
+    return {desc:r.desc||'',cant:r.cant||1,unit:r.unit||'Unidad',vru:r.vru||0,proyecto:r.proyecto||''};
+  });
+  setClipboardItems(copia);
+  actualizarBtnPegar();
+  toast(copia.length+' ítem(s) copiado(s) ✓');
+}
+
+function pegarItems(){
+  var clip=getClipboardItems();
+  if(!clip||!clip.length){ toast('No hay ítems copiados'); return; }
+  if(oc&&oc.anulada){ toast('La orden está anulada'); return; }
+  // Si la única fila es la vacía por defecto, la reemplazamos
+  var soloVacia = rows.length===1 && !rows[0].desc && !(rows[0].vru>0);
+  if(soloVacia) rows=[];
+  clip.forEach(function(r){
+    rows.push({desc:r.desc||'',cant:r.cant||1,unit:r.unit||'Unidad',vru:r.vru||0,proyecto:r.proyecto||''});
+  });
+  renderRows(); recalc(); schedSave();
+  toast(clip.length+' ítem(s) pegado(s) ✓');
+}
+
+function actualizarBtnPegar(){
+  var b=document.getElementById('btn-pegar-items');
+  if(!b) return;
+  var clip=getClipboardItems();
+  b.disabled = !(clip&&clip.length);
+  b.textContent = (clip&&clip.length) ? ('⎗ Pegar '+clip.length+' ítem(s)') : '⎗ Pegar ítems';
+}
+
+function aplicarRefAItems(){
+  if(oc&&oc.anulada){ toast('La orden está anulada'); return; }
+  var sugerido = (rows.length && rows[rows.length-1].proyecto)
+              || (document.getElementById('f-svref')&&document.getElementById('f-svref').value) || '';
+  var code = prompt('Escribe el código de proyecto para aplicarlo a TODOS los ítems de esta orden:', sugerido);
+  if(code===null) return;
+  code=code.trim();
+  rows.forEach(function(r){ r.proyecto=code; });
+  renderRows(); schedSave();
+  toast(code ? ('Código "'+code+'" aplicado a '+rows.length+' ítem(s) ✓') : 'Código borrado de los ítems');
+}
+
+// ── DUPLICAR ORDEN ──
+function duplicarOC(id){
+  var o=getOrdenes().find(function(x){ return x.id===id; });
+  if(!o){ toast('Orden no encontrada'); return; }
+  var tipo=o.tipo||'COM';
+  toast('Duplicando… obteniendo consecutivo');
+  nextNum(tipo, function(num){
+    // Clon profundo, con id y consecutivo nuevos; sin marcas de anulación
+    var copia=JSON.parse(JSON.stringify(o));
+    copia.id='oc_'+Date.now();
+    copia.num=num;
+    copia.tipo=tipo;
+    copia.fecha=new Date().toISOString().slice(0,10);
+    copia.createdAt=Date.now();
+    copia.updatedAt=Date.now();
+    delete copia.anulada; delete copia.motivoAnulacion; delete copia.fechaAnulacion;
+    copia.rows=(o.rows||[]).map(function(r){
+      return {desc:r.desc||'',cant:r.cant||1,unit:r.unit||'Unidad',vru:r.vru||0,proyecto:r.proyecto||''};
+    });
+    if(!copia.rows.length) copia.rows=[{desc:'',cant:1,unit:'Unidad',vru:0,proyecto:copia.svref||''}];
+    oc=copia;
+    rows=JSON.parse(JSON.stringify(copia.rows));
+    showForm();
+    toast('Copia creada como '+num+' — revisa y guarda');
+    schedSave();
+  });
+}
+
+// ── DATALIST DE PROYECTOS ──
+function updateProyectosDL(){
+  var dl=document.getElementById('dl-proyectos');
+  if(!dl) return;
+  var set={};
+  getOrdenes().forEach(function(o){
+    if(o.svref) set[o.svref]=true;
+    (o.rows||[]).forEach(function(r){ if(r&&r.proyecto) set[r.proyecto]=true; });
+  });
+  var opts=Object.keys(set).sort();
+  dl.innerHTML=opts.map(function(p){ return '<option value="'+esc(p)+'"></option>'; }).join('');
 }
 
 // ── RECALC ──
@@ -1040,7 +1273,8 @@ function importItems(){
         desc:item.nombre||item.desc||item.descripcion||'',
         cant:item.cantidad||item.cant||1,
         unit:item.unidad||item.unit||'Unidad',
-        vru:item.precio||item.vru||item.precioVenta||0
+        vru:item.precio||item.vru||item.precioVenta||0,
+        proyecto:(document.getElementById('f-svref')&&document.getElementById('f-svref').value)||''
       });
     }
   });
@@ -1048,6 +1282,11 @@ function importItems(){
 }
 
 // ── PDF ──
+function nombrePDF(o){
+  var cod=(o.svref&&o.svref.trim()) || ((o.rows||[]).map(function(r){return r.proyecto;}).filter(Boolean)[0]) || '';
+  var prov=(o.prov||'').trim();
+  return [o.num,cod,prov].filter(Boolean).join(' - ').replace(/[\\/:*?"<>|]+/g,' ').trim();
+}
 function buildPDF(o){
   var bruto=o.rows.reduce(function(s,r){ return s+(r.cant||1)*(r.vru||0); },0);
   var d=bruto*o.desc/100, sub=bruto-d;
@@ -1071,7 +1310,7 @@ function buildPDF(o){
   var antRows=antPct>0
     ?'<tr class="ta"><td>Anticipo ('+antPct+'%)</td><td>'+cf(vAnt)+'</td></tr>'
      +'<tr class="ts"><td>'+lSal+'</td><td>'+cf(vSal)+'</td></tr>':'';
-  return '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+o.num+(o.svref?' · '+o.svref:'')+'</title>'
+  return '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+nombrePDF(o)+'</title>'
     +'<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">'
     +'<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:"DM Sans",sans-serif;font-size:.75rem;color:#111;padding:.7rem 1.2rem}'
     +'table{width:100%;border-collapse:collapse}.tc{text-align:center}.tr{text-align:right}'
@@ -1239,7 +1478,7 @@ function makeBackup(){
   var provs=getProvs();
   var cfg=getCFG();
   if(!ordenes.length && !provs.length) return;
-  var data={ts:new Date().toISOString(),ordenes:ordenes,provs:provs,cfg:cfg};
+  var data={ts:new Date().toISOString(),ordenes:ordenes,provs:provs,cfg:cfg,projStatus:getProjStatus(),cargos:getCargos(),pagos:getPagos()};
   try{ localStorage.setItem(BACKUP_KEY,JSON.stringify(data)); }catch(e){}
   renderBackups();
 }
@@ -1253,6 +1492,9 @@ function restoreBackup(){
     if(data.ordenes) sSet('ordenes',data.ordenes);
     if(data.provs) sSet('provs',data.provs);
     if(data.cfg) sSet('cfg',data.cfg);
+    if(data.projStatus) sSet('proj_status',data.projStatus);
+    if(data.cargos) sSet('cargos',data.cargos);
+    if(data.pagos) sSet('pagos',data.pagos);
     updateDL(); renderHist(); loadCFGForm(); renderProvDir();
     toast('Backup restaurado ✓');
   }catch(e){ toast('Error al restaurar'); }
@@ -1286,6 +1528,9 @@ function importBackupFile(input){
       if(data.ordenes) sSet('ordenes',data.ordenes);
       if(data.provs) sSet('provs',data.provs);
       if(data.cfg) sSet('cfg',data.cfg);
+    if(data.projStatus) sSet('proj_status',data.projStatus);
+    if(data.cargos) sSet('cargos',data.cargos);
+    if(data.pagos) sSet('pagos',data.pagos);
       updateDL(); renderHist(); loadCFGForm(); renderProvDir();
       makeBackup();
       toast('Datos importados ✓');
@@ -1323,8 +1568,590 @@ function renderBackups(){
 function updateResetBtn(){
   var btn=document.getElementById('btn-reset-cfg');
   if(!btn) return;
-  var activas=getOrdenes().filter(function(o){ return !o.anulada; });
+  var activas=getOrdenes().filter(function(o){ return !o.anulada && !o.esCargo && !o.esMeta; });
   btn.style.display=activas.length===0?'inline-block':'none';
+}
+
+// ── CONTROL DE PROYECTOS ──
+var filtroProj='ALL', filtroOfi='ALL';
+var PROJ_UI={
+  PROY:{list:'proj-list',summary:'proj-summary',pending:'proj-pending',search:'srch-proj',fbar:'proj-fbar'},
+  OFI :{list:'ofi-list', summary:'ofi-summary', pending:'ofi-pending', search:'srch-ofi', fbar:'ofi-fbar'}
+};
+function getFiltro(modo){ return modo==='OFI'?filtroOfi:filtroProj; }
+function setFiltro(modo,v){ if(modo==='OFI') filtroOfi=v; else filtroProj=v; }
+
+// Gastos manuales (caja menor, etc.) — no pasan por orden de compra
+// Los gastos ahora se guardan como registros dentro de las órdenes (esCargo:true),
+// así viajan por la MISMA sincronización que las órdenes de compra.
+function getCargos(){
+  var out={};
+  getOrdenes().forEach(function(o){
+    if(o.esCargo && !o.anulada){
+      out[o.id]={id:o.id,proyecto:o.proyecto||o.svref||'',concepto:o.concepto||'GASTOS X CAJA MENOR',
+        valor:+o.valor||+o.total||0,fecha:o.fecha||'',nota:o.nota||''};
+    }
+  });
+  (sGet('cargos')||[]).forEach(function(c){ if(c&&c.id&&!out[c.id]) out[c.id]=c; }); // respaldo de datos antiguos
+  return Object.keys(out).map(function(k){ return out[k]; });
+}
+function saveCargos(list){ sSet('cargos',list); }
+
+// Envía un registro (orden o gasto) al servidor por la misma vía que autoSave
+function enviarOrdenServidor(data){
+  if(API_URL==='PENDIENTE_URL') return;
+  jsonpCall('payload='+encodeURIComponent(JSON.stringify({action:'saveOrden',data:data})))
+    .then(function(res){ actualizarIndicador(!!(res&&res.ok)); })
+    .catch(function(){ actualizarIndicador(false); });
+}
+function nuevoRegistroCargo(c){
+  return {
+    id:c.id||('cm_'+Date.now()), esCargo:true, tipo:'CM',
+    proyecto:c.proyecto, concepto:c.concepto||'GASTOS X CAJA MENOR',
+    valor:+c.valor||0, fecha:c.fecha||'', nota:c.nota||'',
+    svref:c.proyecto||'', prov:'', num:'', total:+c.valor||0, rows:[], anulada:false,
+    createdAt:Date.now(), updatedAt:Date.now()
+  };
+}
+
+// Estado de proyectos: guardado en un registro de configuración (esMeta) que SÍ se sincroniza
+function getMetaConfig(){
+  return getOrdenes().find(function(o){ return o.esMeta && o.id==='meta_config'; }) || null;
+}
+function getProjStatus(){
+  var m=getMetaConfig();
+  if(m && m.projStatus) return m.projStatus;
+  return sGet('proj_status')||{}; // respaldo de datos antiguos
+}
+function saveProjStatus(m){ sSet('proj_status',m); }
+function statusDe(code){ var m=getProjStatus(); return m[code]==='finalizado'?'finalizado':'proceso'; }
+function setStatusProj(code,st){
+  var list=getOrdenes();
+  var idx=list.findIndex(function(o){ return o.esMeta && o.id==='meta_config'; });
+  var rec;
+  if(idx<0){
+    rec={id:'meta_config',esMeta:true,projStatus:Object.assign({},sGet('proj_status')||{}),createdAt:Date.now(),updatedAt:Date.now()};
+    list.push(rec);
+  } else {
+    rec=list[idx]; if(!rec.projStatus) rec.projStatus={};
+  }
+  rec.projStatus[code]=st; rec.updatedAt=Date.now();
+  saveOrdenes(list);
+  var lp=sGet('proj_status')||{}; lp[code]=st; sSet('proj_status',lp); // copia local
+  enviarOrdenServidor(rec);
+  makeBackup();
+  toast('Proyecto "'+code+'": '+(st==='finalizado'?'Finalizado ✅':'En proceso 🟡'));
+}
+
+// ── GASTOS (CAJA MENOR) ──
+function openCargo(proj){
+  document.getElementById('cargo-proj').value=proj||'';
+  document.getElementById('cargo-concepto').value='GASTOS X CAJA MENOR';
+  document.getElementById('cargo-valor').value='';
+  document.getElementById('cargo-fecha').value=new Date().toISOString().slice(0,10);
+  document.getElementById('cargo-nota').value='';
+  updateProyectosDL();
+  document.getElementById('modal-cargo').classList.add('on');
+}
+function closeCargo(){ document.getElementById('modal-cargo').classList.remove('on'); }
+function guardarCargo(){
+  var proj=(document.getElementById('cargo-proj').value||'').trim();
+  var val=parseFloat(document.getElementById('cargo-valor').value)||0;
+  if(!proj){ toast('Escribe el código del proyecto'); return; }
+  if(!(val>0)){ toast('Escribe un valor válido'); return; }
+  var rec=nuevoRegistroCargo({
+    proyecto:proj,
+    concepto:(document.getElementById('cargo-concepto').value||'GASTOS X CAJA MENOR').trim(),
+    valor:val,
+    fecha:document.getElementById('cargo-fecha').value||new Date().toISOString().slice(0,10),
+    nota:(document.getElementById('cargo-nota').value||'').trim()
+  });
+  var list=getOrdenes(); list.push(rec); saveOrdenes(list);
+  enviarOrdenServidor(rec);
+  makeBackup(); closeCargo(); renderProyectos('PROY');
+  toast('Gasto cargado a "'+proj+'" ✓');
+}
+function borrarCargo(id){
+  if(!confirm('¿Eliminar este gasto de caja menor?')) return;
+  var list=getOrdenes();
+  var idx=list.findIndex(function(o){ return o.id===id; });
+  if(idx>=0){
+    list[idx].anulada=true; list[idx].updatedAt=Date.now();
+    saveOrdenes(list);
+    enviarOrdenServidor(list[idx]);
+  }
+  var leg=sGet('cargos')||[]; var leg2=leg.filter(function(c){ return c.id!==id; });
+  if(leg2.length!==leg.length) sSet('cargos',leg2);
+  makeBackup(); renderProyectos('PROY');
+  toast('Gasto eliminado');
+}
+
+// Órdenes activas con al menos un ítem sin código asignado (por vista)
+function ordenesSinCodigo(modo){
+  modo=modo||'PROY';
+  return getOrdenes().filter(function(o){
+    if(o.anulada) return false;
+    var esOfi=(o.tipo==='OFI');
+    if(modo==='OFI' ? !esOfi : esOfi) return false;
+    return (o.rows||[]).some(function(r){
+      var tieneContenido=(r.desc&&r.desc.trim()) || ((r.cant||0)*(r.vru||0)>0);
+      return tieneContenido && !(r.proyecto&&r.proyecto.trim());
+    });
+  }).sort(function(a,b){ return b.createdAt-a.createdAt; });
+}
+
+function projDeRow(r,o){
+  return (r&&r.proyecto&&r.proyecto.trim()) ? r.proyecto.trim()
+       : (o&&o.svref&&o.svref.trim()) ? o.svref.trim()
+       : 'Sin proyecto';
+}
+
+function computeProyectos(modo,hastaMes){
+  modo=modo||'PROY';
+  var map={};
+  var totOCs={}, granTotal=0, granItems=0;
+  getOrdenes().forEach(function(o){
+    if(o.anulada) return;
+    var esOfi=(o.tipo==='OFI');
+    if(modo==='OFI' ? !esOfi : esOfi) return; // Proyectos excluye OFI; Oficina solo OFI
+    if(o.esCargo||o.esMeta) return; // los gastos se suman aparte, no como ítems de OC
+    if(hastaMes && (!o.fecha || o.fecha.slice(0,7) > hastaMes)) return; // solo lo causado hasta el mes
+    (o.rows||[]).forEach(function(r){
+      var linea=(r.cant||1)*(r.vru||0);
+      if(!linea && !(r.desc&&r.desc.trim())) return; // ignora filas vacías
+      var p=projDeRow(r,o);
+      if(!map[p]) map[p]={nombre:p,total:0,items:0,ocs:{},tipos:{},provs:{},cajamenor:0,cargos:[]};
+      var m=map[p];
+      m.total+=linea; m.items+=1; granTotal+=linea; granItems+=1;
+      m.tipos[o.tipo]=(m.tipos[o.tipo]||0)+linea;
+      var prov=o.prov||'Sin proveedor';
+      m.provs[prov]=(m.provs[prov]||0)+linea;
+      if(!m.ocs[o.id]) m.ocs[o.id]={id:o.id,num:o.num,prov:prov,tipo:o.tipo,fecha:o.fecha,items:0,subtotal:0};
+      m.ocs[o.id].items+=1; m.ocs[o.id].subtotal+=linea;
+      totOCs[o.id]=true;
+    });
+  });
+  // Gastos manuales (caja menor) — solo en la vista de Proyectos
+  if(modo==='PROY'){
+    getCargos().forEach(function(c){
+      if(hastaMes && (!c.fecha || c.fecha.slice(0,7) > hastaMes)) return;
+      var p=(c.proyecto&&c.proyecto.trim())||'Sin proyecto';
+      if(!map[p]) map[p]={nombre:p,total:0,items:0,ocs:{},tipos:{},provs:{},cajamenor:0,cargos:[]};
+      var m=map[p]; var v=+c.valor||0;
+      m.total+=v; m.cajamenor+=v; granTotal+=v;
+      m.cargos.push(c);
+    });
+  }
+  var list=Object.keys(map).map(function(k){ return map[k]; })
+    .sort(function(a,b){ return b.total-a.total; });
+  return {list:list, granTotal:granTotal, granItems:granItems, nOCs:Object.keys(totOCs).length, nProy:list.length};
+}
+
+function renderProyectos(modo){
+  modo=modo||'PROY';
+  var ui=PROJ_UI[modo];
+  if(modo==='PROY') populateMeses();
+  var hastaMes=getHastaMes(modo);
+  var data=computeProyectos(modo,hastaMes);
+  var q=((document.getElementById(ui.search)||{}).value||'').toLowerCase();
+  var esProy=(modo==='PROY');
+
+  // Aviso: órdenes sin código
+  var pend=ordenesSinCodigo(modo);
+  var pbox=document.getElementById(ui.pending);
+  if(pbox){
+    if(!pend.length){ pbox.innerHTML=''; }
+    else {
+      var filasP=pend.map(function(o){
+        var f=o.fecha?new Date(o.fecha+'T12:00').toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'2-digit'}):'—';
+        return '<div style="display:flex;align-items:center;gap:.6rem;padding:.4rem .55rem;border-bottom:1px solid rgba(255,255,255,.05)">'
+          +'<span style="font-size:.66rem;font-weight:700;color:var(--coral);min-width:70px">'+esc(o.num||'—')+'</span>'
+          +'<span style="flex:1;font-size:.72rem">'+esc(o.prov||'Sin proveedor')+'</span>'
+          +'<span style="font-size:.6rem;color:var(--dim)">'+f+'</span>'
+          +'<button class="btn-sm" data-open-pend="'+o.id+'" style="padding:.24rem .6rem;font-size:.6rem">Abrir y codificar</button>'
+        +'</div>';
+      }).join('');
+      pbox.innerHTML='<div style="border:1px solid rgba(255,77,46,.4);background:rgba(255,77,46,.06);padding:.7rem .85rem;margin-bottom:1rem">'
+        +'<div style="display:flex;align-items:center;gap:.5rem;cursor:pointer" data-pend-head="1">'
+          +'<span style="font-size:.78rem;font-weight:700;color:var(--coral)">⚠ '+pend.length+' orden(es) sin código asignado</span>'
+          +'<span style="font-size:.62rem;color:var(--dim);margin-left:auto" data-pend-arrow="1">▾ ver</span>'
+        +'</div>'
+        +'<div data-pend-body="1" style="display:none;margin-top:.55rem">'+filasP+'</div>'
+      +'</div>';
+      var ph=pbox.querySelector('[data-pend-head]');
+      ph.addEventListener('click',function(){
+        var b=pbox.querySelector('[data-pend-body]'), ar=pbox.querySelector('[data-pend-arrow]');
+        var open=b.style.display==='none';
+        b.style.display=open?'block':'none'; ar.textContent=open?'▴ ocultar':'▾ ver';
+      });
+      pbox.querySelectorAll('[data-open-pend]').forEach(function(btn){
+        btn.addEventListener('click',function(){ openOC(btn.getAttribute('data-open-pend')); });
+      });
+    }
+  }
+
+  // Conteo y costo por estado (antes de filtrar)
+  var nProc=0, nFin=0, costProc=0, costFin=0;
+  data.list.forEach(function(p){
+    if(statusDe(p.nombre)==='finalizado'){ nFin++; costFin+=p.total; }
+    else { nProc++; costProc+=p.total; }
+  });
+
+  var sum=document.getElementById(ui.summary);
+  if(sum){
+    sum.innerHTML=
+      '<div class="psum"><div class="psum-lbl">'+(esProy?'Proyectos':'Rubros')+'</div><div class="psum-val">'+data.nProy+'</div></div>'
+     +'<div class="psum"><div class="psum-lbl">🟡 En proceso ('+nProc+')</div><div class="psum-val">'+cf(costProc)+'</div></div>'
+     +'<div class="psum"><div class="psum-lbl">✅ Finalizados ('+nFin+')</div><div class="psum-val">'+cf(costFin)+'</div></div>'
+     +'<div class="psum"><div class="psum-lbl">Costo total (base)</div><div class="psum-val">'+cf(data.granTotal)+'</div></div>';
+  }
+
+  var cont=document.getElementById(ui.list);
+  if(!cont) return;
+  var list=data.list;
+  var filtro=getFiltro(modo);
+  if(filtro!=='ALL') list=list.filter(function(p){ return statusDe(p.nombre)===filtro; });
+  if(q) list=list.filter(function(p){ return p.nombre.toLowerCase().includes(q); });
+  if(!list.length){ cont.innerHTML='<div class="empty">No hay '+(esProy?'proyectos':'rubros')+' en esta vista.</div>'; return; }
+  cont.innerHTML=list.map(function(p,idx){
+    var st=statusDe(p.nombre);
+    var fin=st==='finalizado';
+    var tipos=Object.keys(p.tipos).sort(function(a,b){ return p.tipos[b]-p.tipos[a]; });
+    var chips=tipos.map(function(t){ return '<span class="proj-chip">'+t+': '+cf(p.tipos[t])+'</span>'; }).join('');
+    if(p.cajamenor>0) chips+='<span class="proj-chip" style="border-color:rgba(96,165,250,.5);color:var(--blue)">Caja menor: '+cf(p.cajamenor)+'</span>';
+    var ocs=Object.keys(p.ocs).map(function(k){ return p.ocs[k]; }).sort(function(a,b){ return b.subtotal-a.subtotal; });
+    var filas=ocs.map(function(oc){
+      var f=oc.fecha?new Date(oc.fecha+'T12:00').toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'2-digit'}):'—';
+      return '<tr><td>'+esc(oc.num||'—')+'</td><td>'+esc(oc.prov)+'</td><td>'+esc(oc.tipo)+'</td><td>'+f+'</td>'
+        +'<td class="r">'+oc.items+'</td><td class="r">'+cf(oc.subtotal)+'</td>'
+        +'<td class="r"><button class="btn-sm" data-open-proj="'+oc.id+'" style="padding:.2rem .5rem;font-size:.58rem">Abrir</button></td></tr>';
+    }).join('');
+    var provs=Object.keys(p.provs).map(function(k){ return {n:k,v:p.provs[k]}; }).sort(function(a,b){ return b.v-a.v; });
+    var filasProv=provs.map(function(pr){ return '<tr><td>'+esc(pr.n)+'</td><td class="r">'+cf(pr.v)+'</td></tr>'; }).join('');
+    var bloqueCargos='';
+    if(esProy && p.cargos && p.cargos.length){
+      var filasC=p.cargos.map(function(c){
+        var f=c.fecha?new Date(c.fecha+'T12:00').toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'2-digit'}):'—';
+        return '<tr><td>'+f+'</td><td>'+esc(c.concepto||'')+'</td><td>'+esc(c.nota||'')+'</td>'
+          +'<td class="r">'+cf(c.valor)+'</td>'
+          +'<td class="r"><button class="btn-di" data-del-cargo="'+c.id+'" title="Eliminar gasto">×</button></td></tr>';
+      }).join('');
+      bloqueCargos='<div style="font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);margin:.7rem 0 .3rem">Gastos de caja menor / otros</div>'
+        +'<table class="proj-tbl"><thead><tr><th>Fecha</th><th>Concepto</th><th>Nota</th><th class="r">Valor</th><th></th></tr></thead><tbody>'+filasC+'</tbody></table>';
+    }
+    var estBadge='<span class="proj-chip" style="'+(fin?'border-color:rgba(74,222,128,.5);color:var(--green)':'border-color:rgba(232,200,64,.5);color:var(--gold)')+'">'+(fin?'✅ Finalizado':'🟡 En proceso')+'</span>';
+    var btnCargo=esProy?('<button class="btn-cp" data-add-cargo="'+esc(p.nombre)+'" style="margin-top:.5rem;padding:.32rem .7rem">＋ Cargar gasto (caja menor)</button> '):'';
+    return '<div class="proj-card"'+(fin?' style="opacity:.72"':'')+'>'
+      +'<div class="proj-head"><div>'
+        +'<div class="proj-name">'+esc(p.nombre)+' '+estBadge+'</div>'
+        +'<div class="proj-meta">'+ocs.length+' orden(es) · '+p.items+' ítem(s)'+(p.cajamenor>0?' · incluye caja menor':'')+'</div>'
+        +'<div class="proj-chips">'+chips+'</div>'
+      +'</div><div style="text-align:right"><div class="proj-total">'+cf(p.total)+'</div>'
+        +'<select class="sel" data-status-proj="'+esc(p.nombre)+'" style="margin-top:.5rem;font-size:.66rem;padding:.3rem 1.6rem .3rem .5rem;width:auto">'
+          +'<option value="proceso"'+(!fin?' selected':'')+'>🟡 En proceso</option>'
+          +'<option value="finalizado"'+(fin?' selected':'')+'>✅ Finalizado</option>'
+        +'</select>'
+      +'</div></div>'
+      +btnCargo
+      +'<button class="proj-toggle" data-toggle-proj="'+modo+'-'+idx+'">▾ Ver detalle</button>'
+      +'<div class="proj-detail" id="proj-detail-'+modo+'-'+idx+'">'
+        +'<table class="proj-tbl"><thead><tr><th>Orden</th><th>Proveedor</th><th>Tipo</th><th>Fecha</th><th class="r">Ítems</th><th class="r">Costo</th><th></th></tr></thead><tbody>'+filas+'</tbody></table>'
+        +'<div style="font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin:.7rem 0 .3rem">Por proveedor</div>'
+        +'<table class="proj-tbl"><tbody>'+filasProv+'</tbody></table>'
+        +bloqueCargos
+      +'</div>'
+    +'</div>';
+  }).join('');
+  cont.querySelectorAll('[data-toggle-proj]').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var d=document.getElementById('proj-detail-'+btn.getAttribute('data-toggle-proj'));
+      if(d){ d.classList.toggle('on'); btn.textContent=(d.classList.contains('on')?'▴ Ocultar detalle':'▾ Ver detalle'); }
+    });
+  });
+  cont.querySelectorAll('[data-open-proj]').forEach(function(btn){
+    btn.addEventListener('click',function(){ openOC(btn.getAttribute('data-open-proj')); });
+  });
+  cont.querySelectorAll('[data-status-proj]').forEach(function(sel){
+    sel.addEventListener('change',function(){ setStatusProj(sel.getAttribute('data-status-proj'), sel.value); renderProyectos(modo); });
+  });
+  cont.querySelectorAll('[data-add-cargo]').forEach(function(btn){
+    btn.addEventListener('click',function(){ openCargo(btn.getAttribute('data-add-cargo')); });
+  });
+  cont.querySelectorAll('[data-del-cargo]').forEach(function(btn){
+    btn.addEventListener('click',function(){ borrarCargo(btn.getAttribute('data-del-cargo')); });
+  });
+}
+
+function expProyectos(modo){
+  modo=modo||'PROY';
+  if(typeof XLSX==='undefined'){ toast('Cargando XLSX…'); return; }
+  var esProy=(modo==='PROY');
+  var hastaMes=getHastaMes(modo);
+  var data=computeProyectos(modo,hastaMes);
+  var titulo=esProy?'CONTROL DE COSTOS POR PROYECTO':'CONTROL DE COSTOS DE OFICINA';
+  var resumen=[['STRAZA SAS — '+titulo],
+    ['Generado:',new Date().toLocaleString('es-CO')],
+    ['Base: valor de ítems (cantidad × valor unitario), sin IVA. Excluye órdenes anuladas.'+(esProy?' Incluye gastos de caja menor.':'')],
+    [],
+    [(esProy?'PROYECTO':'RUBRO'),'ESTADO','# ÓRDENES','# ÍTEMS','CAJA MENOR','COSTO TOTAL']];
+  data.list.forEach(function(p){
+    resumen.push([p.nombre, statusDe(p.nombre)==='finalizado'?'Finalizado':'En proceso', Object.keys(p.ocs).length, p.items, p.cajamenor||0, p.total]);
+  });
+  resumen.push([]);
+  resumen.push(['TOTAL','',data.nOCs,data.granItems,'',data.granTotal]);
+  var ws1=XLSX.utils.aoa_to_sheet(resumen);
+  ws1['!cols']=[{wch:38},{wch:14},{wch:12},{wch:10},{wch:16},{wch:18}];
+  var det=[[(esProy?'PROYECTO':'RUBRO'),'ORIGEN','ORDEN/CONCEPTO','TIPO','PROVEEDOR','FECHA','DESCRIPCIÓN','CANT.','UNIDAD','VR. UNIT.','VR. TOTAL']];
+  getOrdenes().forEach(function(o){
+    if(o.anulada) return;
+    var esOfi=(o.tipo==='OFI');
+    if(modo==='OFI' ? !esOfi : esOfi) return;
+    if(o.esCargo||o.esMeta) return;
+    if(hastaMes && (!o.fecha || o.fecha.slice(0,7) > hastaMes)) return;
+    (o.rows||[]).forEach(function(r){
+      var linea=(r.cant||1)*(r.vru||0);
+      if(!linea && !(r.desc&&r.desc.trim())) return;
+      det.push([projDeRow(r,o),'Orden',o.num,o.tipo,o.prov||'',o.fecha||'',r.desc||'',r.cant||1,r.unit||'',r.vru||0,linea]);
+    });
+  });
+  if(esProy){
+    getCargos().forEach(function(c){
+      if(hastaMes && (!c.fecha || c.fecha.slice(0,7) > hastaMes)) return;
+      det.push([(c.proyecto||'Sin proyecto'),'Caja menor',c.concepto||'','',' ',c.fecha||'',c.nota||'','','','',(+c.valor||0)]);
+    });
+  }
+  var ws2=XLSX.utils.aoa_to_sheet(det);
+  ws2['!cols']=[{wch:24},{wch:12},{wch:22},{wch:8},{wch:26},{wch:12},{wch:40},{wch:8},{wch:10},{wch:14},{wch:16}];
+  var wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws1,esProy?'Por proyecto':'Por rubro');
+  XLSX.utils.book_append_sheet(wb,ws2,'Detalle');
+  var wbout=XLSX.write(wb,{bookType:'xlsx',type:'array'});
+  var blob=new Blob([wbout],{type:'application/octet-stream'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=esProy?'Straza_Costos_Proyectos.xlsx':'Straza_Costos_Oficina.xlsx';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+  toast('Excel exportado ✓');
+}
+
+// ── CUENTAS POR PAGAR ──
+var filtroPagar='PEND';
+function getPagos(){ return sGet('pagos')||{}; } // respaldo de datos antiguos
+function defaultEstadoPago(o){
+  if(/contado/i.test(o.pago||'')) return 'pagado'; // Contado se asume ya pagado
+  return 'pendiente';
+}
+function estadoPago(id){
+  var o=getOrdenes().find(function(x){ return x.id===id; });
+  if(!o) return 'pendiente';
+  if(o.pagoEstado) return o.pagoEstado;
+  var m=getPagos(); if(m[id]) return (m[id]==='anticipo'?'anticipo_girado':m[id]);
+  return defaultEstadoPago(o);
+}
+function setEstadoPago(id,st){
+  var list=getOrdenes(); var o=list.find(function(x){ return x.id===id; });
+  if(o){ o.pagoEstado=st; o.updatedAt=Date.now(); saveOrdenes(list); enviarOrdenServidor(o); }
+  makeBackup();
+}
+function setRecepcion(id,fecha){
+  var list=getOrdenes(); var o=list.find(function(x){ return x.id===id; });
+  if(o){ o.fechaRecepcion=fecha||''; o.updatedAt=Date.now(); saveOrdenes(list); enviarOrdenServidor(o); }
+  makeBackup();
+}
+function saldoDeOrden(o){
+  var total=+o.total||0, pct=+o.anticipo||0, ant=pct>0?total*pct/100:0;
+  var est=estadoPago(o.id);
+  if(est==='pagado') return 0;
+  if(est==='anticipo_girado') return total-ant;
+  return total;
+}
+function vencimientoSaldo(o){
+  if(!(saldoDeOrden(o)>0)) return null;               // sin saldo, nada por vencer
+  var pago=o.pago||'', rec=o.fechaRecepcion||'';
+  if(/contado/i.test(pago)) return null;
+  if(/contraentrega/i.test(pago)) return rec||o.entrega||null;
+  var dias=diasTermino(pago); if(dias===null) return null; // A convenir
+  if(!rec) return null;                                // el crédito cuenta desde la recepción
+  var d=new Date(rec+'T12:00'); d.setDate(d.getDate()+dias);
+  return d.toISOString().slice(0,10);
+}
+function clasePago(o){
+  var pago=o.pago||'', est=estadoPago(o.id), pct=+o.anticipo||0;
+  if(est==='pagado') return /contado/i.test(pago)?'Contado pagado':'Pagado';
+  if(est==='anticipo_girado') return 'Anticipo girado';
+  if(/contado/i.test(pago)) return 'Contado';
+  if(pct>0||/contraentrega/i.test(pago)) return 'Anticipo';
+  if(diasTermino(pago)>0||/convenir/i.test(pago)) return 'A crédito';
+  return 'Pendiente';
+}
+
+function diasTermino(pago){
+  if(!pago) return null;
+  if(/contado/i.test(pago)) return 0;
+  var m=pago.match(/(\d+)\s*d/i); if(m) return +m[1];
+  return null;
+}
+function vencimientoDe(o){
+  if(!o.fecha) return null;
+  var pago=o.pago||'';
+  if(/contraentrega/i.test(pago)) return o.entrega||null;
+  var dias=diasTermino(pago);
+  if(dias===null) return null; // A convenir u otros
+  var d=new Date(o.fecha+'T12:00'); d.setDate(d.getDate()+dias);
+  return d.toISOString().slice(0,10);
+}
+function codigosDeOrden(o){
+  var set={};
+  (o.rows||[]).forEach(function(r){
+    var p=(r.proyecto&&r.proyecto.trim())||(o.svref&&o.svref.trim())||'';
+    if(p) set[p]=true;
+  });
+  var arr=Object.keys(set);
+  return arr.length?arr.join(', '):(o.svref||'—');
+}
+
+function computePagar(){
+  var out=[];
+  getOrdenes().forEach(function(o){
+    if(o.anulada||o.esCargo||o.esMeta) return;
+    var total=+o.total||0;
+    var pct=+o.anticipo||0;
+    var ant=pct>0?total*pct/100:0;
+    out.push({id:o.id,num:o.num,tipo:o.tipo,prov:o.prov||'Sin proveedor',
+      proyectos:codigosDeOrden(o),fecha:o.fecha,pago:o.pago||'',anticipoPct:pct,
+      total:total,anticipo:ant,saldo:saldoDeOrden(o),estado:estadoPago(o.id),
+      rec:o.fechaRecepcion||'',clase:clasePago(o),venc:vencimientoSaldo(o)});
+  });
+  return out;
+}
+
+function chipClasePago(clase){
+  var col='var(--mid)';
+  if(clase==='Contado pagado'||clase==='Pagado') col='var(--green)';
+  else if(clase==='Anticipo girado') col='var(--blue)';
+  else if(clase==='A crédito') col='var(--gold)';
+  else if(clase==='Anticipo') col='var(--purple)';
+  else if(clase==='Pendiente') col='var(--coral)';
+  return '<span class="proj-chip" style="border-color:'+col+';color:'+col+';font-size:.54rem">'+clase+'</span>';
+}
+function renderPagar(){
+  var q=((document.getElementById('srch-pagar')||{}).value||'').toLowerCase();
+  var hoy=new Date().toISOString().slice(0,10);
+  var all=computePagar();
+  var totSaldo=0, totVenc=0, nConSaldo=0;
+  all.forEach(function(r){ if(r.saldo>0){ totSaldo+=r.saldo; nConSaldo++; if(r.venc&&r.venc<hoy) totVenc+=r.saldo; } });
+  var sum=document.getElementById('pagar-summary');
+  if(sum){
+    sum.innerHTML=
+      '<div class="psum"><div class="psum-lbl">Saldo total por pagar</div><div class="psum-val">'+cf(totSaldo)+'</div></div>'
+     +'<div class="psum"><div class="psum-lbl">🔴 Vencido</div><div class="psum-val" style="color:var(--coral)">'+cf(totVenc)+'</div></div>'
+     +'<div class="psum"><div class="psum-lbl">Órdenes con saldo</div><div class="psum-val">'+nConSaldo+'</div></div>';
+  }
+  var f=filtroPagar;
+  var list=all.filter(function(r){
+    var vencida=r.saldo>0 && r.venc && r.venc<hoy;
+    if(f==='PEND') return r.saldo>0;
+    if(f==='VENC') return vencida;
+    if(f==='CRED') return r.saldo>0 && (diasTermino(r.pago)>0 || /convenir/i.test(r.pago));
+    if(f==='ANT')  return r.saldo>0 && r.anticipoPct>0;
+    if(f==='PAG')  return r.estado==='pagado';
+    return true;
+  });
+  if(q) list=list.filter(function(r){ return (r.prov+' '+r.num+' '+r.proyectos).toLowerCase().includes(q); });
+  list.sort(function(a,b){
+    if(!a.venc && !b.venc) return 0;
+    if(!a.venc) return 1; if(!b.venc) return -1;
+    return a.venc<b.venc?-1:(a.venc>b.venc?1:0);
+  });
+  var cont=document.getElementById('pagar-list');
+  if(!cont) return;
+  if(!list.length){ cont.innerHTML='<div class="empty">No hay órdenes en esta vista.</div>'; return; }
+  var filas=list.map(function(r){
+    var f2=r.fecha?new Date(r.fecha+'T12:00').toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'2-digit'}):'—';
+    var vencida=r.saldo>0 && r.venc && r.venc<hoy;
+    var esCred = diasTermino(r.pago)>0;
+    var vf;
+    if(r.venc) vf=new Date(r.venc+'T12:00').toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'2-digit'})+(vencida?' ⚠':'');
+    else if(r.saldo>0 && esCred && !r.rec) vf='<span style="color:var(--dim);font-size:.6rem">falta recepción</span>';
+    else vf='—';
+    return '<tr'+(r.estado==='pagado'?' style="opacity:.5"':'')+'>'
+      +'<td>'+esc(r.num||'—')+'<div style="margin-top:.2rem">'+chipClasePago(r.clase)+'</div></td>'
+      +'<td>'+esc(r.prov)+'</td><td>'+esc(r.proyectos)+'</td>'
+      +'<td>'+esc(r.pago||'—')+'</td><td>'+f2+'</td>'
+      +'<td><input type="date" class="inp" data-recepcion="'+r.id+'" value="'+esc(r.rec||'')+'" style="font-size:.62rem;padding:.18rem .3rem;width:132px"></td>'
+      +'<td class="r">'+cf(r.total)+'</td>'
+      +'<td class="r">'+(r.anticipo>0?cf(r.anticipo):'—')+'</td>'
+      +'<td class="r"><strong>'+cf(r.saldo)+'</strong></td>'
+      +'<td'+(vencida?' style="color:var(--coral);font-weight:700"':'')+'>'+vf+'</td>'
+      +'<td><select class="sel" data-estado-pago="'+r.id+'" style="font-size:.62rem;padding:.2rem 1.4rem .2rem .4rem;width:auto">'
+        +'<option value="pendiente"'+(r.estado==='pendiente'?' selected':'')+'>Pendiente</option>'
+        +'<option value="anticipo_girado"'+(r.estado==='anticipo_girado'?' selected':'')+'>Anticipo girado</option>'
+        +'<option value="pagado"'+(r.estado==='pagado'?' selected':'')+'>Pagado / Contado</option>'
+      +'</select></td>'
+      +'<td class="r"><button class="btn-sm" data-open-pagar="'+r.id+'" style="padding:.2rem .5rem;font-size:.58rem">Abrir</button></td>'
+    +'</tr>';
+  }).join('');
+  cont.innerHTML='<table class="proj-tbl"><thead><tr>'
+    +'<th>Orden</th><th>Proveedor</th><th>Proyecto</th><th>Forma pago</th><th>Emisión</th><th>Recepción</th>'
+    +'<th class="r">Total</th><th class="r">Anticipo</th><th class="r">Saldo</th><th>Vence</th><th>Estado</th><th></th>'
+    +'</tr></thead><tbody>'+filas+'</tbody></table>';
+  cont.querySelectorAll('[data-estado-pago]').forEach(function(sel){
+    sel.addEventListener('change',function(){ setEstadoPago(sel.getAttribute('data-estado-pago'), sel.value); renderPagar(); });
+  });
+  cont.querySelectorAll('[data-recepcion]').forEach(function(inp){
+    inp.addEventListener('change',function(){ setRecepcion(inp.getAttribute('data-recepcion'), inp.value); renderPagar(); });
+  });
+  cont.querySelectorAll('[data-open-pagar]').forEach(function(btn){
+    btn.addEventListener('click',function(){ openOC(btn.getAttribute('data-open-pagar')); });
+  });
+}
+
+function expPagar(){
+  if(typeof XLSX==='undefined'){ toast('Cargando XLSX…'); return; }
+  var hoy=new Date().toISOString().slice(0,10);
+  var rows=[['STRAZA SAS — CUENTAS POR PAGAR'],
+    ['Generado:',new Date().toLocaleString('es-CO')],
+    ['Vencimiento = emisión + plazo según forma de pago. Excluye órdenes anuladas.'],[],
+    ['ORDEN','CLASE','PROVEEDOR','PROYECTO','FORMA PAGO','EMISIÓN','RECEPCIÓN','VENCE','TOTAL','ANTICIPO','SALDO','ESTADO','VENCIDA']];
+  computePagar().forEach(function(r){
+    if(!(r.saldo>0) && r.estado!=='pagado') return;
+    rows.push([r.num,r.clase,r.prov,r.proyectos,r.pago,r.fecha||'',r.rec||'',r.venc||'',r.total,r.anticipo,r.saldo,r.estado,(r.saldo>0&&r.venc&&r.venc<hoy)?'SÍ':'']);
+  });
+  var ws=XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols']=[{wch:12},{wch:15},{wch:26},{wch:20},{wch:18},{wch:12},{wch:12},{wch:12},{wch:16},{wch:14},{wch:16},{wch:14},{wch:9}];
+  var wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'Por pagar');
+  var wbout=XLSX.write(wb,{bookType:'xlsx',type:'array'});
+  var blob=new Blob([wbout],{type:'application/octet-stream'});
+  var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='Straza_Cuentas_por_Pagar.xlsx';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(a.href);
+  toast('Excel de cuentas por pagar exportado ✓');
+}
+
+// ── FILTRO POR MES (Proyectos) ──
+function mesesDisponibles(){
+  var set={};
+  getOrdenes().forEach(function(o){ if(!o.anulada && !o.esCargo && !o.esMeta && o.tipo!=='OFI' && o.fecha) set[o.fecha.slice(0,7)]=true; });
+  getCargos().forEach(function(c){ if(c.fecha) set[c.fecha.slice(0,7)]=true; });
+  return Object.keys(set).sort().reverse();
+}
+function populateMeses(){
+  var s=document.getElementById('proj-mes'); if(!s) return;
+  var actual=s.value;
+  var meses=mesesDisponibles();
+  var html='<option value="">Costos: todo (acumulado)</option>';
+  meses.forEach(function(m){
+    var d=new Date(m+'-01T12:00');
+    var lbl=d.toLocaleDateString('es-CO',{month:'long',year:'numeric'});
+    html+='<option value="'+m+'">Causado hasta '+lbl+'</option>';
+  });
+  s.innerHTML=html;
+  if(actual) s.value=actual;
+}
+function getHastaMes(modo){
+  if(modo!=='PROY') return '';
+  var s=document.getElementById('proj-mes');
+  return (s&&s.value)||'';
 }
 
 // ── EVENTOS (todos aquí, sin onclick en HTML) ──
@@ -1334,7 +2161,52 @@ document.addEventListener('DOMContentLoaded', function(){
 
   // Tabs
   document.getElementById('tab-hist').addEventListener('click', function(){ showPage('hist'); });
+  document.getElementById('tab-proj').addEventListener('click', function(){ showPage('proj'); });
+  document.getElementById('tab-ofi').addEventListener('click', function(){ showPage('ofi'); });
+  document.getElementById('tab-pagar').addEventListener('click', function(){ showPage('pagar'); });
   document.getElementById('tab-cfg').addEventListener('click', function(){ showPage('cfg'); });
+
+  // Control de Proyectos
+  document.getElementById('srch-proj').addEventListener('input', function(){ renderProyectos('PROY'); });
+  document.getElementById('btn-proj-xls').addEventListener('click', function(){ expProyectos('PROY'); });
+  document.getElementById('proj-fbar').addEventListener('click', function(e){
+    var btn=e.target.closest('.fb'); if(!btn) return;
+    setFiltro('PROY', btn.getAttribute('data-ps'));
+    document.querySelectorAll('#proj-fbar .fb').forEach(function(b){ b.classList.remove('on'); });
+    btn.classList.add('on');
+    renderProyectos('PROY');
+  });
+
+  // Control de Oficina
+  document.getElementById('srch-ofi').addEventListener('input', function(){ renderProyectos('OFI'); });
+  document.getElementById('btn-ofi-xls').addEventListener('click', function(){ expProyectos('OFI'); });
+  document.getElementById('ofi-fbar').addEventListener('click', function(e){
+    var btn=e.target.closest('.fb'); if(!btn) return;
+    setFiltro('OFI', btn.getAttribute('data-ps'));
+    document.querySelectorAll('#ofi-fbar .fb').forEach(function(b){ b.classList.remove('on'); });
+    btn.classList.add('on');
+    renderProyectos('OFI');
+  });
+
+  // Gastos de caja menor
+  document.getElementById('btn-cargar-gasto').addEventListener('click', function(){ openCargo(''); });
+  document.getElementById('btn-cargo-cancel').addEventListener('click', closeCargo);
+  document.getElementById('btn-cargo-ok').addEventListener('click', guardarCargo);
+  document.getElementById('modal-cargo').addEventListener('click', function(e){ if(e.target===this) closeCargo(); });
+
+  // Filtro por mes (Proyectos)
+  document.getElementById('proj-mes').addEventListener('change', function(){ renderProyectos('PROY'); });
+
+  // Cuentas por pagar
+  document.getElementById('srch-pagar').addEventListener('input', renderPagar);
+  document.getElementById('btn-pagar-xls').addEventListener('click', expPagar);
+  document.getElementById('pagar-fbar').addEventListener('click', function(e){
+    var btn=e.target.closest('.fb'); if(!btn) return;
+    filtroPagar=btn.getAttribute('data-pf');
+    document.querySelectorAll('#pagar-fbar .fb').forEach(function(b){ b.classList.remove('on'); });
+    btn.classList.add('on');
+    renderPagar();
+  });
 
   // Filtros
   document.getElementById('fbars').addEventListener('click', function(e){
@@ -1369,6 +2241,9 @@ document.addEventListener('DOMContentLoaded', function(){
   // Items
   document.getElementById('btn-add-row').addEventListener('click', addRow);
   document.getElementById('btn-importar').addEventListener('click', openModal);
+  document.getElementById('btn-copiar-items').addEventListener('click', copiarItems);
+  document.getElementById('btn-pegar-items').addEventListener('click', pegarItems);
+  document.getElementById('btn-aplicar-ref').addEventListener('click', aplicarRefAItems);
 
   // PDF / XLS
   document.getElementById('btn-pdf').addEventListener('click', expPDF);
@@ -1404,6 +2279,44 @@ document.addEventListener('DOMContentLoaded', function(){
     localStorage.setItem('soc_api_url', 'https://script.google.com/macros/s/AKfycbxEnB3l6HfXfm4nDLqVUla1jT-KKnk65X1ySP3aOTD7qUxdsF0ZwcwMbs_R-wWiU4zy/exec');
   }
   API_URL = getAPIUrl(); // cargar URL guardada
+
+  // Migrar gastos antiguos (locales) a registros sincronizables
+  (function migrarCargos(){
+    var leg=sGet('cargos')||[]; if(!leg.length) return;
+    var ord=getOrdenes(); var yaHay={};
+    ord.forEach(function(o){ if(o.esCargo) yaHay[o.id]=true; });
+    var nuevos=[];
+    leg.forEach(function(c){
+      if(!c||!c.id||yaHay[c.id]) return;
+      var rec=nuevoRegistroCargo(c); rec.id=c.id;
+      ord.push(rec); nuevos.push(rec);
+    });
+    if(nuevos.length){ saveOrdenes(ord); nuevos.forEach(function(r){ enviarOrdenServidor(r); }); }
+  })();
+
+  // Migrar estados antiguos (proyecto y pago) al formato sincronizable
+  (function migrarEstados(){
+    var list=getOrdenes(); var changed=false; var toSend=[];
+    var ps=sGet('proj_status')||{};
+    if(Object.keys(ps).length){
+      var idx=list.findIndex(function(o){ return o.esMeta && o.id==='meta_config'; });
+      var rec = idx<0 ? {id:'meta_config',esMeta:true,projStatus:{},createdAt:Date.now(),updatedAt:Date.now()} : list[idx];
+      if(!rec.projStatus) rec.projStatus={};
+      var merged=(idx<0);
+      Object.keys(ps).forEach(function(k){ if(rec.projStatus[k]!==ps[k]){ rec.projStatus[k]=ps[k]; merged=true; } });
+      if(idx<0) list.push(rec);
+      if(merged){ rec.updatedAt=Date.now(); changed=true; toSend.push(rec); }
+    }
+    var pg=sGet('pagos')||{};
+    Object.keys(pg).forEach(function(id){
+      var o=list.find(function(x){ return x.id===id; });
+      if(o && !o.pagoEstado){
+        o.pagoEstado=(pg[id]==='anticipo'?'anticipo_girado':pg[id]);
+        o.updatedAt=Date.now(); changed=true; toSend.push(o);
+      }
+    });
+    if(changed){ saveOrdenes(list); toSend.forEach(function(r){ enviarOrdenServidor(r); }); }
+  })();
   updateDL();
   renderHist();
 
