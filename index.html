@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0048)file:///C:/Users/Usuario/Downloads/index_24.html -->
+<!-- saved from url=(0048)file:///C:/Users/Usuario/Downloads/index_27.html -->
 <html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -184,7 +184,7 @@ input,select,textarea{font-family:inherit;outline:none}
     <div class="hdr-sub">Straza SAS · NIT 830.026.954-5</div>
   </div>
   <div class="hdr-right">
-    <span id="sync-status" style="font-size: 0.62rem; color: var(--green);">🟢 Sincronizado 08:21 p. m.</span>
+    <span id="sync-status" style="font-size: 0.62rem; color: var(--green);">🟢 Sincronizado 07:52 a. m.</span>
     <button id="btn-sync" style="background:transparent;border:1px solid var(--brd2);color:var(--mid);padding:.38rem .75rem;font-size:.63rem;text-transform:uppercase;letter-spacing:.08em;cursor:pointer">↻ Sincronizar</button>
     <span id="count-lbl" style="font-size:.65rem;color:var(--dim)">84 orden(es)</span>
     <button class="btn-new" id="btn-nueva">+ Nueva Orden</button>
@@ -192,15 +192,17 @@ input,select,textarea{font-family:inherit;outline:none}
 </div>
 
 <div class="tabs">
-  <button class="tab on" id="tab-hist">📋 Historial</button>
+  <button class="tab" id="tab-hist">📋 Historial</button>
+  <button class="tab on" id="tab-req">📝 Requisiciones</button>
   <button class="tab" id="tab-proj">📊 Proyectos</button>
   <button class="tab" id="tab-ofi">🏢 Oficina</button>
   <button class="tab" id="tab-pagar">💸 Cuentas por pagar</button>
+  <button class="tab" id="tab-util">📈 Utilidad</button>
   <button class="tab" id="tab-cfg">⚙ Configuración</button>
 </div>
 
 <!-- HISTORIAL -->
-<div class="page on" id="page-hist">
+<div class="page" id="page-hist" style="display: none;">
   <div class="toolbar">
     <input class="srch" id="srch" placeholder="Buscar proveedor, número, referencia...">
   </div>
@@ -216,7 +218,7 @@ input,select,textarea{font-family:inherit;outline:none}
 </div>
 
 <!-- FORMULARIO -->
-<div class="page" id="page-form" style="padding:0">
+<div class="page" id="page-form" style="padding: 0px; display: none;">
   <div class="form-bar">
     <button class="btn-back" id="btn-back">← Volver</button>
     <span class="form-num" id="f-num">COM-001</span>
@@ -297,7 +299,7 @@ input,select,textarea{font-family:inherit;outline:none}
           </tr></thead>
           <tbody id="itbody"></tbody>
         </table>
-        <datalist id="dl-proyectos"></datalist>
+        <datalist id="dl-proyectos"><option value="COTIZACION 11A"></option><option value="COTIZACION 12A"></option><option value="COTIZACION 13A"></option><option value="COTIZACION 14A"></option><option value="COTIZACION 15"></option><option value="COTIZACION 16"></option><option value="COTIZACION 17"></option><option value="COTIZACION 18"></option><option value="MANTENIMIENTO MAQUINA LASER"></option><option value="MAQUINAS"></option><option value="SV- 12221"></option><option value="SV- 12415"></option><option value="SV-11676"></option><option value="SV-11924 "></option><option value="SV-12201"></option><option value="SV-12208"></option><option value="SV-12231, SV-12346, SV12396, SV12413,SV12415"></option><option value="SV-12277"></option><option value="SV-12378"></option><option value="SV-12497"></option><option value="SV11676"></option><option value="SV11924"></option><option value="SV12030"></option><option value="SV12192"></option><option value="SV12192 - SV12497"></option><option value="SV12192-SV12431-SV12497"></option><option value="SV12231"></option><option value="SV12231 - SV12346 - SV12192 - SV12431 - SV12497"></option><option value="SV12292"></option><option value="SV12346"></option><option value="SV12355"></option><option value="SV12360"></option><option value="SV12396"></option><option value="SV12396-SV12231"></option><option value="SV12396-SV12231-SV12192-SV12497-SV12346"></option><option value="SV12396-SV12413-SV12415"></option><option value="SV12404"></option><option value="SV12405"></option><option value="SV12413-SV12415-SV12396"></option><option value="SV12415"></option><option value="SV12431"></option><option value="SV12431-SV12497"></option><option value="SV12477"></option><option value="SV12482"></option><option value="SV12497"></option><option value="SV12507"></option><option value="SV12511"></option><option value="SV12537"></option><option value="SV12542"></option><option value="sv"></option></datalist>
         <div class="row-btns">
           <button class="btn-add" id="btn-add-row">+ Agregar ítem</button>
           <button class="btn-imp" id="btn-importar">↗ Importar desde cotización</button>
@@ -343,7 +345,7 @@ input,select,textarea{font-family:inherit;outline:none}
 </div>
 
 <!-- CONFIG -->
-<div class="page" id="page-cfg">
+<div class="page" id="page-cfg" style="display: none;">
   <div class="sec">
     <div class="sec-h">🔗 Conexión al servidor (Google Apps Script)</div>
     <div class="sec-b">
@@ -392,13 +394,13 @@ input,select,textarea{font-family:inherit;outline:none}
         </label>
         <span style="font-size:.62rem;color:var(--dim)">El backup se actualiza automáticamente cada vez que guardas o anulas una orden.</span>
       </div>
-      <div id="backup-list"><div style="display:flex;align-items:center;gap:.6rem;padding:.55rem .7rem;border:1px solid var(--brd2);background:rgba(74,222,128,.05)"><div style="flex:1"><div style="font-size:.75rem;font-weight:600;color:var(--green)">✓ Backup automático</div><div style="font-size:.65rem;color:var(--mid)">31 de jul de 2026, 08:21 p. m. · 84 órdenes · 27 proveedores</div></div><button class="btn-sm" id="btn-dl-bk">↓ Descargar</button><button class="btn-sm" id="btn-restore-bk">↺ Restaurar</button></div></div>
+      <div id="backup-list"><div style="display:flex;align-items:center;gap:.6rem;padding:.55rem .7rem;border:1px solid var(--brd2);background:rgba(74,222,128,.05)"><div style="flex:1"><div style="font-size:.75rem;font-weight:600;color:var(--green)">✓ Backup automático</div><div style="font-size:.65rem;color:var(--mid)">01 de ago de 2026, 07:52 a. m. · 86 órdenes · 27 proveedores</div></div><button class="btn-sm" id="btn-dl-bk">↓ Descargar</button><button class="btn-sm" id="btn-restore-bk">↺ Restaurar</button></div></div>
     </div>
   </div>
 </div>
 
 <!-- CONTROL DE PROYECTOS -->
-<div class="page" id="page-proj">
+<div class="page" id="page-proj" style="display: none;">
   <div class="toolbar">
     <input class="srch" id="srch-proj" placeholder="Buscar proyecto...">
     <select class="sel" id="proj-mes" style="max-width:230px"><option value="">Costos: todo (acumulado)</option></select>
@@ -421,7 +423,7 @@ input,select,textarea{font-family:inherit;outline:none}
 </div>
 
 <!-- CONTROL DE OFICINA -->
-<div class="page" id="page-ofi">
+<div class="page" id="page-ofi" style="display: none;">
   <div class="toolbar">
     <input class="srch" id="srch-ofi" placeholder="Buscar rubro de oficina...">
     <button class="btn-xls" id="btn-ofi-xls" style="padding:.48rem 1rem">↓ Exportar Excel</button>
@@ -441,7 +443,7 @@ input,select,textarea{font-family:inherit;outline:none}
 </div>
 
 <!-- CUENTAS POR PAGAR -->
-<div class="page" id="page-pagar">
+<div class="page" id="page-pagar" style="display: none;">
   <div class="toolbar">
     <input class="srch" id="srch-pagar" placeholder="Buscar proveedor, orden o proyecto...">
     <button class="btn-xls" id="btn-pagar-xls" style="padding:.48rem 1rem">↓ Exportar Excel</button>
@@ -462,6 +464,74 @@ input,select,textarea{font-family:inherit;outline:none}
     lista. Lo vencido se resalta en rojo.
   </div>
   <div id="pagar-list"></div>
+</div>
+
+<!-- UTILIDAD -->
+<div class="page" id="page-util" style="display: none;">
+  <div class="toolbar">
+    <input class="srch" id="srch-util" placeholder="Buscar proyecto...">
+    <select class="sel" id="util-mes" style="max-width:230px"><option value="">Costos: todo (acumulado)</option></select>
+    <button class="btn-xls" id="btn-util-xls" style="padding:.48rem 1rem">↓ Exportar Excel</button>
+  </div>
+  <div class="proj-summary" id="util-summary"></div>
+  <div style="font-size:.62rem;color:var(--dim);margin-bottom:.9rem;line-height:1.5">
+    Carga el valor de la orden de compra del cliente (ingreso) por proyecto y verás la utilidad en dinero y en porcentaje
+    frente a los costos cargados. Se actualiza sola cada vez que registras más costos. El % es sobre el valor de la OC del cliente.
+    Con el filtro de mes ves la utilidad según los costos causados hasta ese mes.
+  </div>
+  <div id="util-list"></div>
+</div>
+
+<!-- REQUISICIONES -->
+<div class="page on" id="page-req" style="display: block;">
+  <div class="toolbar">
+    <input class="srch" id="srch-req" placeholder="Buscar requisición, proyecto o ítem...">
+    <button class="btn-new" id="btn-req-crear" style="white-space:nowrap">＋ Crear requisición</button>
+    <button class="btn-new" id="btn-req-genoc" style="white-space:nowrap" disabled="">➜ Generar OC con seleccionados</button>
+    <button class="btn-xls" id="btn-req-xls" style="padding:.48rem 1rem">↓ Exportar Excel</button>
+  </div>
+  <div class="fbars" id="req-fbar">
+    <button class="fb on" data-rf="PEND">Pendientes</button>
+    <button class="fb" data-rf="GEST">Gestionadas</button>
+    <button class="fb" data-rf="ALL">Todas</button>
+  </div>
+  <div class="proj-summary" id="req-summary"><div class="psum"><div class="psum-lbl">Requisitado total</div><div class="psum-val">$0</div></div><div class="psum"><div class="psum-lbl">Pendiente por gestionar</div><div class="psum-val">$0</div></div><div class="psum"><div class="psum-lbl">Ya gestionado</div><div class="psum-val" style="color:var(--green)">$0</div></div><div class="psum"><div class="psum-lbl">💰 Para arrancar</div><div class="psum-val">$0</div></div></div>
+  <div style="font-size:.62rem;color:var(--dim);margin-bottom:.9rem;line-height:1.5">
+    Crea una requisición por proyecto (código + nombre) y agrégale los ítems a comprar. Los valores son una guía (de
+    cotizaciones o internet), no el valor final de la orden. "Para arrancar" suma lo de Contado más el % de anticipo de las
+    líneas Anticipo (solo lo pendiente). Selecciona ítems y pulsa "Generar OC" para crear la orden; al generarla quedan gestionados.
+  </div>
+  <div id="req-list"><div class="empty">Aún no hay requisiciones. Pulsa "＋ Crear requisición" para empezar.</div></div>
+</div>
+
+<!-- MODAL CREAR/EDITAR REQUISICIÓN -->
+<div class="mover" id="modal-reqdoc">
+  <div class="mbox">
+    <div class="mtitle" id="reqdoc-title">Nueva requisición</div>
+    <input type="hidden" id="reqdoc-id">
+    <div class="f" style="margin-bottom:.6rem"><label>Código de proyecto</label><input class="inp" id="reqdoc-proj" list="dl-proyectos" placeholder="SV-..." autocomplete="off"></div>
+    <div class="f" style="margin-bottom:.7rem"><label>Nombre de la requisición</label><input class="inp" id="reqdoc-nombre" placeholder="Ej: Material POP lanzamiento"></div>
+    <div class="mbtns"><button class="mcancel" id="btn-reqdoc-cancel">Cancelar</button><button class="mok" id="btn-reqdoc-ok">Guardar</button></div>
+  </div>
+</div>
+
+<!-- MODAL AGREGAR/EDITAR ÍTEM DE REQUISICIÓN -->
+<div class="mover" id="modal-req">
+  <div class="mbox">
+    <div class="mtitle" id="req-e-title">Agregar ítem</div>
+    <input type="hidden" id="req-e-req">
+    <input type="hidden" id="req-e-id">
+    <div class="f" style="margin-bottom:.6rem"><label>Ítem a comprar</label><input class="inp" id="req-e-item" placeholder="Descripción"></div>
+    <div class="g2" style="margin-bottom:.6rem">
+      <div class="f"><label>Cantidad</label><input class="inp" id="req-e-cant" type="number" min="0" value="1"></div>
+      <div class="f"><label>Valor unitario</label><input class="inp" id="req-e-vunit" type="number" min="0"></div>
+    </div>
+    <div class="g2" style="margin-bottom:.7rem">
+      <div class="f"><label>Tipo de pago</label><select class="sel" id="req-e-pago"><option>Contado</option><option>Anticipo</option><option>Crédito</option></select></div>
+      <div class="f"><label>% anticipo</label><input class="inp" id="req-e-ant" type="number" min="0" max="100"></div>
+    </div>
+    <div class="mbtns"><button class="mcancel" id="btn-req-e-cancel">Cerrar</button><button class="mok" id="btn-req-e-ok">Guardar ítem</button></div>
+  </div>
 </div>
 
 <!-- MODAL -->
@@ -809,9 +879,11 @@ function showPage(id){
   var tab=document.getElementById('tab-'+id);
   if(tab) tab.classList.add('on');
   if(id==='hist') renderHist();
+  if(id==='req') renderReq();
   if(id==='proj') renderProyectos('PROY');
   if(id==='ofi') renderProyectos('OFI');
   if(id==='pagar') renderPagar();
+  if(id==='util') renderUtilidad();
   if(id==='cfg'){ loadCFGForm(); renderProvDir(); renderBackups(); }
 }
 
@@ -830,7 +902,7 @@ function setTipo(t){
 
 function renderHist(){
   var q=(document.getElementById('srch').value||'').toLowerCase();
-  var list=getOrdenes().filter(function(o){ return !o.esCargo && !o.esMeta; }).sort(function(a,b){ return b.createdAt-a.createdAt; });
+  var list=getOrdenes().filter(function(o){ return !o.esCargo && !o.esMeta && !o.esRequisicion; }).sort(function(a,b){ return b.createdAt-a.createdAt; });
   if(filtro!=='ALL') list=list.filter(function(o){ return o.tipo===filtro; });
   if(q) list=list.filter(function(o){
     return (o.prov||'').toLowerCase().includes(q)||(o.num||'').toLowerCase().includes(q)||(o.svref||'').toLowerCase().includes(q);
@@ -881,6 +953,15 @@ function anularOC(id){
   list[idx].motivoAnulacion=motivo.trim();
   list[idx].fechaAnulacion=new Date().toISOString().slice(0,10);
   saveOrdenes(list);
+  // Si la orden nació de una requisición, devolver esas líneas a pendiente
+  if(o.reqOrigen && o.reqOrigen.length){
+    o.reqOrigen.forEach(function(ref){
+      if(!ref || typeof ref!=='object') return;
+      var doc=getReqDoc(ref.req); if(!doc) return;
+      var r=(doc.rows||[]).find(function(x){ return x.id===ref.line; });
+      if(r && r.ocId===o.id){ r.estado='pendiente'; r.ocId=''; r.ocNum=''; saveReqDoc(doc); }
+    });
+  }
   renderHist();
   makeBackup();
   // Enviar anulación al servidor
@@ -1478,7 +1559,7 @@ function makeBackup(){
   var provs=getProvs();
   var cfg=getCFG();
   if(!ordenes.length && !provs.length) return;
-  var data={ts:new Date().toISOString(),ordenes:ordenes,provs:provs,cfg:cfg,projStatus:getProjStatus(),cargos:getCargos(),pagos:getPagos()};
+  var data={ts:new Date().toISOString(),ordenes:ordenes,provs:provs,cfg:cfg,projStatus:getProjStatus(),cargos:getCargos(),pagos:getPagos(),ingresos:getIngresos()};
   try{ localStorage.setItem(BACKUP_KEY,JSON.stringify(data)); }catch(e){}
   renderBackups();
 }
@@ -1495,6 +1576,7 @@ function restoreBackup(){
     if(data.projStatus) sSet('proj_status',data.projStatus);
     if(data.cargos) sSet('cargos',data.cargos);
     if(data.pagos) sSet('pagos',data.pagos);
+    if(data.ingresos) sSet('ingresos',data.ingresos);
     updateDL(); renderHist(); loadCFGForm(); renderProvDir();
     toast('Backup restaurado ✓');
   }catch(e){ toast('Error al restaurar'); }
@@ -1531,6 +1613,7 @@ function importBackupFile(input){
     if(data.projStatus) sSet('proj_status',data.projStatus);
     if(data.cargos) sSet('cargos',data.cargos);
     if(data.pagos) sSet('pagos',data.pagos);
+    if(data.ingresos) sSet('ingresos',data.ingresos);
       updateDL(); renderHist(); loadCFGForm(); renderProvDir();
       makeBackup();
       toast('Datos importados ✓');
@@ -1568,7 +1651,7 @@ function renderBackups(){
 function updateResetBtn(){
   var btn=document.getElementById('btn-reset-cfg');
   if(!btn) return;
-  var activas=getOrdenes().filter(function(o){ return !o.anulada && !o.esCargo && !o.esMeta; });
+  var activas=getOrdenes().filter(function(o){ return !o.anulada && !o.esCargo && !o.esMeta && !o.esRequisicion; });
   btn.style.display=activas.length===0?'inline-block':'none';
 }
 
@@ -1714,7 +1797,7 @@ function computeProyectos(modo,hastaMes){
     if(o.anulada) return;
     var esOfi=(o.tipo==='OFI');
     if(modo==='OFI' ? !esOfi : esOfi) return; // Proyectos excluye OFI; Oficina solo OFI
-    if(o.esCargo||o.esMeta) return; // los gastos se suman aparte, no como ítems de OC
+    if(o.esCargo||o.esMeta||o.esRequisicion) return; // los gastos se suman aparte, no como ítems de OC
     if(hastaMes && (!o.fecha || o.fecha.slice(0,7) > hastaMes)) return; // solo lo causado hasta el mes
     (o.rows||[]).forEach(function(r){
       var linea=(r.cant||1)*(r.vru||0);
@@ -1755,6 +1838,7 @@ function renderProyectos(modo){
   var data=computeProyectos(modo,hastaMes);
   var q=((document.getElementById(ui.search)||{}).value||'').toLowerCase();
   var esProy=(modo==='PROY');
+  var ingresos=esProy?getIngresos():{};
 
   // Aviso: órdenes sin código
   var pend=ordenesSinCodigo(modo);
@@ -1847,6 +1931,15 @@ function renderProyectos(modo){
         +'<div class="proj-meta">'+ocs.length+' orden(es) · '+p.items+' ítem(s)'+(p.cajamenor>0?' · incluye caja menor':'')+'</div>'
         +'<div class="proj-chips">'+chips+'</div>'
       +'</div><div style="text-align:right"><div class="proj-total">'+cf(p.total)+'</div>'
+        +(esProy?(function(){
+           var ing=+ingresos[p.nombre]||0;
+           var util=ing-p.total;
+           var pct=ing>0?(util/ing*100):null;
+           var col=util>=0?'var(--green)':'var(--coral)';
+           return '<div style="margin-top:.4rem;font-size:.58rem;color:var(--dim)">OC cliente</div>'
+             +'<input class="inp" data-ingreso="'+esc(p.nombre)+'" type="number" min="0" value="'+(ing||'')+'" placeholder="0" style="width:130px;text-align:right;font-size:.75rem;padding:.25rem .4rem">'
+             +(ing>0?'<div style="margin-top:.25rem;font-size:.66rem;color:'+col+';font-weight:700">Utilidad: '+cf(util)+' ('+pct.toFixed(1)+'%)</div>':'<div style="margin-top:.25rem;font-size:.58rem;color:var(--dim)">Carga el valor para ver utilidad</div>');
+         })():'')
         +'<select class="sel" data-status-proj="'+esc(p.nombre)+'" style="margin-top:.5rem;font-size:.66rem;padding:.3rem 1.6rem .3rem .5rem;width:auto">'
           +'<option value="proceso"'+(!fin?' selected':'')+'>🟡 En proceso</option>'
           +'<option value="finalizado"'+(fin?' selected':'')+'>✅ Finalizado</option>'
@@ -1873,6 +1966,9 @@ function renderProyectos(modo){
   });
   cont.querySelectorAll('[data-status-proj]').forEach(function(sel){
     sel.addEventListener('change',function(){ setStatusProj(sel.getAttribute('data-status-proj'), sel.value); renderProyectos(modo); });
+  });
+  cont.querySelectorAll('[data-ingreso]').forEach(function(inp){
+    inp.addEventListener('change',function(){ setIngreso(inp.getAttribute('data-ingreso'), parseFloat(inp.value)||0); renderProyectos(modo); });
   });
   cont.querySelectorAll('[data-add-cargo]').forEach(function(btn){
     btn.addEventListener('click',function(){ openCargo(btn.getAttribute('data-add-cargo')); });
@@ -1906,7 +2002,7 @@ function expProyectos(modo){
     if(o.anulada) return;
     var esOfi=(o.tipo==='OFI');
     if(modo==='OFI' ? !esOfi : esOfi) return;
-    if(o.esCargo||o.esMeta) return;
+    if(o.esCargo||o.esMeta||o.esRequisicion) return;
     if(hastaMes && (!o.fecha || o.fecha.slice(0,7) > hastaMes)) return;
     (o.rows||[]).forEach(function(r){
       var linea=(r.cant||1)*(r.vru||0);
@@ -2014,7 +2110,7 @@ function codigosDeOrden(o){
 function computePagar(){
   var out=[];
   getOrdenes().forEach(function(o){
-    if(o.anulada||o.esCargo||o.esMeta) return;
+    if(o.anulada||o.esCargo||o.esMeta||o.esRequisicion) return;
     var total=+o.total||0;
     var pct=+o.anticipo||0;
     var ant=pct>0?total*pct/100:0;
@@ -2131,7 +2227,7 @@ function expPagar(){
 // ── FILTRO POR MES (Proyectos) ──
 function mesesDisponibles(){
   var set={};
-  getOrdenes().forEach(function(o){ if(!o.anulada && !o.esCargo && !o.esMeta && o.tipo!=='OFI' && o.fecha) set[o.fecha.slice(0,7)]=true; });
+  getOrdenes().forEach(function(o){ if(!o.anulada && !o.esCargo && !o.esMeta && !o.esRequisicion && o.tipo!=='OFI' && o.fecha) set[o.fecha.slice(0,7)]=true; });
   getCargos().forEach(function(c){ if(c.fecha) set[c.fecha.slice(0,7)]=true; });
   return Object.keys(set).sort().reverse();
 }
@@ -2154,6 +2250,390 @@ function getHastaMes(modo){
   return (s&&s.value)||'';
 }
 
+// ── REQUISICIONES (varias, cada una con código + nombre) ──
+var filtroReq='PEND';
+var reqSel={};
+
+function getReqDocs(){ return getOrdenes().filter(function(o){ return o.esRequisicion && !o.anulada && o.id!=='meta_config' && o.id!=='req_master'; }); }
+function getReqDoc(id){ return getOrdenes().find(function(o){ return o.id===id && o.esRequisicion; }); }
+function saveReqDoc(rec){
+  var list=getOrdenes(); var idx=list.findIndex(function(o){ return o.id===rec.id; });
+  rec.updatedAt=Date.now();
+  if(idx>=0) list[idx]=rec; else list.push(rec);
+  saveOrdenes(list); enviarOrdenServidor(rec); makeBackup();
+}
+
+// Crear / editar / eliminar requisición (documento)
+function openReqDoc(id){
+  document.getElementById('reqdoc-id').value=id||'';
+  var r=id?getReqDoc(id):null;
+  document.getElementById('reqdoc-proj').value=r?(r.proyecto||''):'';
+  document.getElementById('reqdoc-nombre').value=r?(r.nombre||''):'';
+  document.getElementById('reqdoc-title').textContent=id?'Editar requisición':'Nueva requisición';
+  updateProyectosDL();
+  document.getElementById('modal-reqdoc').classList.add('on');
+}
+function closeReqDoc(){ document.getElementById('modal-reqdoc').classList.remove('on'); }
+function guardarReqDoc(){
+  var id=document.getElementById('reqdoc-id').value;
+  var proj=(document.getElementById('reqdoc-proj').value||'').trim();
+  var nombre=(document.getElementById('reqdoc-nombre').value||'').trim();
+  if(!proj){ toast('Escribe el código de proyecto'); return; }
+  if(!nombre){ toast('Ponle un nombre a la requisición'); return; }
+  if(id){ var r=getReqDoc(id); if(!r) return; r.proyecto=proj; r.nombre=nombre; saveReqDoc(r); }
+  else { saveReqDoc({id:'req_'+Date.now(),esRequisicion:true,proyecto:proj,nombre:nombre,rows:[],anulada:false,createdAt:Date.now(),updatedAt:Date.now()}); }
+  closeReqDoc(); renderReq();
+  toast('Requisición guardada ✓');
+}
+function eliminarReqDoc(id){
+  var r=getReqDoc(id); if(!r) return;
+  if(!confirm('¿Eliminar la requisición "'+(r.nombre||'')+'" y todas sus líneas?')) return;
+  r.anulada=true; saveReqDoc(r);
+  renderReq(); toast('Requisición eliminada');
+}
+
+// Líneas dentro de una requisición
+function openReqLinea(reqId,lineId){
+  document.getElementById('req-e-req').value=reqId;
+  document.getElementById('req-e-id').value=lineId||'';
+  var r=null;
+  if(lineId){ var doc=getReqDoc(reqId); r=((doc&&doc.rows)||[]).find(function(x){ return x.id===lineId; }); }
+  document.getElementById('req-e-item').value=r?(r.item||''):'';
+  document.getElementById('req-e-cant').value=r?(r.cant||1):1;
+  document.getElementById('req-e-vunit').value=r?(r.vunit||''):'';
+  document.getElementById('req-e-pago').value=r?(r.pago||'Contado'):'Contado';
+  document.getElementById('req-e-ant').value=r?(r.antpct||''):'';
+  document.getElementById('req-e-title').textContent=lineId?'Editar ítem':'Agregar ítem';
+  document.getElementById('modal-req').classList.add('on');
+  if(!lineId) setTimeout(function(){ document.getElementById('req-e-item').focus(); },50);
+}
+function closeReqLinea(){ document.getElementById('modal-req').classList.remove('on'); }
+function guardarReqLinea(){
+  var reqId=document.getElementById('req-e-req').value;
+  var lineId=document.getElementById('req-e-id').value;
+  var doc=getReqDoc(reqId); if(!doc) return;
+  var item=(document.getElementById('req-e-item').value||'').trim();
+  var cant=parseFloat(document.getElementById('req-e-cant').value)||0;
+  var vunit=parseFloat(document.getElementById('req-e-vunit').value)||0;
+  var pago=document.getElementById('req-e-pago').value||'Contado';
+  var ant=parseFloat(document.getElementById('req-e-ant').value)||0;
+  if(!item){ toast('Escribe el ítem'); return; }
+  if(!(cant>0)){ toast('Cantidad inválida'); return; }
+  if(!doc.rows) doc.rows=[];
+  if(lineId){
+    var r=doc.rows.find(function(x){ return x.id===lineId; }); if(!r) return;
+    r.item=item; r.cant=cant; r.vunit=vunit; r.vtotal=cant*vunit; r.pago=pago; r.antpct=(pago==='Anticipo'?(ant||50):0);
+  } else {
+    doc.rows.push({id:'rq_'+Date.now(),item:item,cant:cant,vunit:vunit,vtotal:cant*vunit,pago:pago,antpct:(pago==='Anticipo'?(ant||50):0),estado:'pendiente',ocId:'',ocNum:'',fecha:new Date().toISOString().slice(0,10)});
+  }
+  saveReqDoc(doc); renderReq();
+  // deja el modal abierto para seguir agregando si era alta nueva
+  if(lineId){ closeReqLinea(); } else {
+    document.getElementById('req-e-id').value='';
+    document.getElementById('req-e-item').value='';
+    document.getElementById('req-e-vunit').value='';
+    document.getElementById('req-e-item').focus();
+  }
+  toast('Ítem guardado ✓');
+}
+function delReqLinea(reqId,lineId){
+  if(!confirm('¿Eliminar este ítem?')) return;
+  var doc=getReqDoc(reqId); if(!doc) return;
+  doc.rows=(doc.rows||[]).filter(function(x){ return x.id!==lineId; });
+  saveReqDoc(doc); delete reqSel[lineId]; renderReq(); toast('Ítem eliminado');
+}
+function toggleReqEstado(reqId,lineId){
+  var doc=getReqDoc(reqId); if(!doc) return;
+  var r=(doc.rows||[]).find(function(x){ return x.id===lineId; }); if(!r) return;
+  if(r.estado==='gestionada'){ r.estado='pendiente'; r.ocId=''; r.ocNum=''; } else { r.estado='gestionada'; r.ocId=''; r.ocNum=''; }
+  saveReqDoc(doc); renderReq();
+}
+
+function generarOCDesdeReq(){
+  var sel=[];
+  getReqDocs().forEach(function(doc){
+    (doc.rows||[]).forEach(function(l){ if(reqSel[l.id] && l.estado!=='gestionada') sel.push({reqId:doc.id,proyecto:doc.proyecto,line:l}); });
+  });
+  if(!sel.length){ toast('Selecciona al menos un ítem pendiente'); return; }
+  var tipo='COM'; toast('Generando orden…');
+  nextNum(tipo, function(num){
+    var id='oc_'+Date.now();
+    oc={ id:id, tipo:tipo, num:num, svref:(sel[0].proyecto||''),
+      fecha:new Date().toISOString().slice(0,10), entrega:'', pago:'Contado', anticipo:'',
+      prov:'', nit:'', dir:'', tel:'', email:'', obs:'', iva:19, desc:0, rete:4, rica:0.966,
+      total:0, createdAt:Date.now(), updatedAt:Date.now(),
+      reqOrigen:sel.map(function(s){ return {req:s.reqId,line:s.line.id}; }) };
+    rows=sel.map(function(s){ return {desc:s.line.item,cant:s.line.cant,unit:'Unidad',vru:s.line.vunit,proyecto:s.proyecto}; });
+    var byReq={}; sel.forEach(function(s){ (byReq[s.reqId]=byReq[s.reqId]||[]).push(s.line.id); });
+    Object.keys(byReq).forEach(function(rid){
+      var doc=getReqDoc(rid); if(!doc) return;
+      (doc.rows||[]).forEach(function(l){ if(byReq[rid].indexOf(l.id)>=0){ l.estado='gestionada'; l.ocId=id; l.ocNum=num; } });
+      saveReqDoc(doc);
+    });
+    reqSel={};
+    var listo=getOrdenes(); listo.push(oc); saveOrdenes(listo);
+    enviarOrdenServidor(oc); makeBackup();
+    showForm();
+    toast('Orden '+num+' generada — ajusta proveedor, valores y cantidades');
+  });
+}
+
+function computeReq(){
+  var docs=getReqDocs();
+  var totReq=0,totPend=0,totGest=0,arrancar=0;
+  docs.forEach(function(doc){
+    (doc.rows||[]).forEach(function(l){
+      var v=+l.vtotal||0; totReq+=v;
+      if(l.estado==='gestionada'){ totGest+=v; }
+      else { totPend+=v;
+        if(l.pago==='Contado') arrancar+=v;
+        else if(l.pago==='Anticipo') arrancar+=v*(+l.antpct||0)/100;
+      }
+    });
+  });
+  return {docs:docs,totReq:totReq,totPend:totPend,totGest:totGest,arrancar:arrancar};
+}
+
+function chipPagoReq(pago){
+  var col=pago==='Contado'?'var(--green)':(pago==='Anticipo'?'var(--purple)':'var(--gold)');
+  return '<span class="proj-chip" style="border-color:'+col+';color:'+col+';font-size:.54rem">'+esc(pago)+'</span>';
+}
+
+function renderReq(){
+  updateProyectosDL();
+  var data=computeReq();
+  var q=((document.getElementById('srch-req')||{}).value||'').toLowerCase();
+  var sum=document.getElementById('req-summary');
+  if(sum){
+    sum.innerHTML=
+      '<div class="psum"><div class="psum-lbl">Requisitado total</div><div class="psum-val">'+cf(data.totReq)+'</div></div>'
+     +'<div class="psum"><div class="psum-lbl">Pendiente por gestionar</div><div class="psum-val">'+cf(data.totPend)+'</div></div>'
+     +'<div class="psum"><div class="psum-lbl">Ya gestionado</div><div class="psum-val" style="color:var(--green)">'+cf(data.totGest)+'</div></div>'
+     +'<div class="psum"><div class="psum-lbl">💰 Para arrancar</div><div class="psum-val">'+cf(data.arrancar)+'</div></div>';
+  }
+  var cont=document.getElementById('req-list'); if(!cont) return;
+  var docs=data.docs;
+  if(q) docs=docs.filter(function(d){ return (d.nombre||'').toLowerCase().includes(q) || (d.proyecto||'').toLowerCase().includes(q) || (d.rows||[]).some(function(l){ return (l.item||'').toLowerCase().includes(q); }); });
+  if(!docs.length){ cont.innerHTML='<div class="empty">Aún no hay requisiciones. Pulsa "＋ Crear requisición" para empezar.</div>'; return; }
+  cont.innerHTML=docs.map(function(d){
+    var lineas=(d.rows||[]).filter(function(l){
+      if(filtroReq==='PEND') return l.estado!=='gestionada';
+      if(filtroReq==='GEST') return l.estado==='gestionada';
+      return true;
+    });
+    var tReq=0,tPend=0,tArr=0;
+    (d.rows||[]).forEach(function(l){ var v=+l.vtotal||0; tReq+=v; if(l.estado!=='gestionada'){ tPend+=v; if(l.pago==='Contado') tArr+=v; else if(l.pago==='Anticipo') tArr+=v*(+l.antpct||0)/100; } });
+    var filas=lineas.map(function(l){
+      var gest=l.estado==='gestionada';
+      var sel = gest ? '<span class="proj-chip" style="border-color:var(--green);color:var(--green);font-size:.54rem">✅ '+(l.ocNum?('OC '+esc(l.ocNum)):'Gestionada')+'</span>'
+        : '<input type="checkbox" data-req-sel="'+l.id+'"'+(reqSel[l.id]?' checked':'')+'>';
+      var antTxt=(l.pago==='Anticipo'&&l.antpct)?(' '+l.antpct+'%'):'';
+      var key=d.id+'::'+l.id;
+      return '<tr'+(gest?' style="opacity:.6"':'')+'>'
+        +'<td style="text-align:center">'+sel+'</td>'
+        +'<td>'+esc(l.item||'')+'</td>'
+        +'<td class="r">'+(l.cant||0)+'</td>'
+        +'<td class="r">'+cf(l.vunit||0)+'</td>'
+        +'<td class="r">'+cf(l.vtotal||0)+'</td>'
+        +'<td>'+chipPagoReq(l.pago)+antTxt+'</td>'
+        +'<td class="r" style="white-space:nowrap">'
+          +'<button class="btn-sm" data-rl-edit="'+key+'" style="padding:.18rem .45rem;font-size:.56rem">Editar</button> '
+          +'<button class="btn-sm" data-rl-tog="'+key+'" style="padding:.18rem .45rem;font-size:.56rem">'+(gest?'Reabrir':'Marcar')+'</button> '
+          +'<button class="btn-di" data-rl-del="'+key+'" title="Eliminar">×</button>'
+        +'</td></tr>';
+    }).join('');
+    if(!filas) filas='<tr><td colspan="7" style="color:var(--dim);padding:.5rem;font-size:.7rem">Sin ítems en esta vista.</td></tr>';
+    return '<div class="proj-card">'
+      +'<div class="proj-head"><div>'
+        +'<div class="proj-name">'+esc(d.nombre||'(sin nombre)')+' <span class="proj-chip" style="font-size:.55rem">'+esc(d.proyecto||'—')+'</span></div>'
+        +'<div class="proj-meta">Requisitado '+cf(tReq)+' · Pendiente '+cf(tPend)+' · Para arrancar '+cf(tArr)+'</div>'
+      +'</div><div style="text-align:right;display:flex;flex-direction:column;gap:.4rem;align-items:flex-end">'
+        +'<button class="btn-add" data-req-additem="'+d.id+'" style="padding:.32rem .7rem;font-size:.66rem">+ Agregar ítem</button>'
+        +'<div><button class="btn-sm" data-req-edit="'+d.id+'" style="padding:.2rem .5rem;font-size:.56rem">Editar</button> '
+          +'<button class="btn-di" data-req-elim="'+d.id+'" title="Eliminar requisición">×</button></div>'
+      +'</div></div>'
+      +'<table class="proj-tbl" style="margin-top:.6rem"><thead><tr><th>Sel</th><th>Ítem</th><th class="r">Cant.</th><th class="r">Vr. unit.</th><th class="r">Vr. total</th><th>Pago</th><th></th></tr></thead><tbody>'+filas+'</tbody></table>'
+    +'</div>';
+  }).join('');
+  cont.querySelectorAll('[data-req-sel]').forEach(function(chk){ chk.addEventListener('change',function(){ reqSel[chk.getAttribute('data-req-sel')]=chk.checked; actualizarBtnGenOC(); }); });
+  cont.querySelectorAll('[data-req-additem]').forEach(function(b){ b.addEventListener('click',function(){ openReqLinea(b.getAttribute('data-req-additem'),''); }); });
+  cont.querySelectorAll('[data-req-edit]').forEach(function(b){ b.addEventListener('click',function(){ openReqDoc(b.getAttribute('data-req-edit')); }); });
+  cont.querySelectorAll('[data-req-elim]').forEach(function(b){ b.addEventListener('click',function(){ eliminarReqDoc(b.getAttribute('data-req-elim')); }); });
+  cont.querySelectorAll('[data-rl-edit]').forEach(function(b){ b.addEventListener('click',function(){ var p=b.getAttribute('data-rl-edit').split('::'); openReqLinea(p[0],p[1]); }); });
+  cont.querySelectorAll('[data-rl-tog]').forEach(function(b){ b.addEventListener('click',function(){ var p=b.getAttribute('data-rl-tog').split('::'); toggleReqEstado(p[0],p[1]); }); });
+  cont.querySelectorAll('[data-rl-del]').forEach(function(b){ b.addEventListener('click',function(){ var p=b.getAttribute('data-rl-del').split('::'); delReqLinea(p[0],p[1]); }); });
+  actualizarBtnGenOC();
+}
+function actualizarBtnGenOC(){
+  var b=document.getElementById('btn-req-genoc'); if(!b) return;
+  var n=Object.keys(reqSel).filter(function(k){ return reqSel[k]; }).length;
+  b.disabled=(n===0);
+  b.textContent = n>0 ? ('➜ Generar OC ('+n+' ítem'+(n>1?'s':'')+')') : '➜ Generar OC con seleccionados';
+}
+
+function expReq(){
+  if(typeof XLSX==='undefined'){ toast('Cargando XLSX…'); return; }
+  var rows=[['STRAZA SAS — REQUISICIONES (compras planeadas)'],
+    ['Generado:',new Date().toLocaleString('es-CO')],
+    ['Valores guía (cotización/internet), no son el valor final de la orden.'],[],
+    ['REQUISICIÓN','PROYECTO','ÍTEM','CANT.','VR. UNIT.','VR. TOTAL','PAGO','% ANTICIPO','ESTADO','OC','FECHA']];
+  getReqDocs().forEach(function(d){
+    (d.rows||[]).forEach(function(l){
+      rows.push([d.nombre||'',d.proyecto||'',l.item||'',l.cant||0,l.vunit||0,l.vtotal||0,l.pago||'',l.antpct||0,(l.estado==='gestionada'?'Gestionada':'Pendiente'),l.ocNum||'',l.fecha||'']);
+    });
+  });
+  var ws=XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols']=[{wch:26},{wch:16},{wch:40},{wch:8},{wch:16},{wch:16},{wch:12},{wch:10},{wch:12},{wch:12},{wch:12}];
+  var wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'Requisiciones');
+  var wbout=XLSX.write(wb,{bookType:'xlsx',type:'array'});
+  var blob=new Blob([wbout],{type:'application/octet-stream'});
+  var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='Straza_Requisiciones.xlsx';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(a.href);
+  toast('Excel de requisiciones exportado ✓');
+}
+
+// ── UTILIDAD (INGRESO OC CLIENTE) ──
+var filtroUtilMes='';
+function getIngresos(){
+  var m=getMetaConfig();
+  if(m && m.ingresos) return m.ingresos;
+  return sGet('ingresos')||{};
+}
+function setIngreso(code,val){
+  var list=getOrdenes();
+  var idx=list.findIndex(function(o){ return o.esMeta && o.id==='meta_config'; });
+  var rec;
+  if(idx<0){ rec={id:'meta_config',esMeta:true,projStatus:Object.assign({},sGet('proj_status')||{}),ingresos:{},createdAt:Date.now(),updatedAt:Date.now()}; list.push(rec); }
+  else { rec=list[idx]; if(!rec.ingresos) rec.ingresos={}; }
+  if(val>0) rec.ingresos[code]=val; else delete rec.ingresos[code];
+  rec.updatedAt=Date.now();
+  saveOrdenes(list);
+  var lp=sGet('ingresos')||{}; if(val>0) lp[code]=val; else delete lp[code]; sSet('ingresos',lp);
+  enviarOrdenServidor(rec);
+  makeBackup();
+}
+
+function costosPorMes(){
+  var m={};
+  getOrdenes().forEach(function(o){
+    if(o.anulada||o.esCargo||o.esMeta||o.esRequisicion||o.tipo==='OFI'||!o.fecha) return;
+    var mes=o.fecha.slice(0,7);
+    (o.rows||[]).forEach(function(r){ var v=(r.cant||1)*(r.vru||0); if(v) m[mes]=(m[mes]||0)+v; });
+  });
+  getCargos().forEach(function(c){ if(c.fecha){ var mes=c.fecha.slice(0,7); m[mes]=(m[mes]||0)+(+c.valor||0); } });
+  return m;
+}
+
+function computeUtilidad(hastaMes){
+  var data=computeProyectos('PROY',hastaMes);
+  var costMap={}; data.list.forEach(function(p){ costMap[p.nombre]=p.total; });
+  var ing=getIngresos();
+  var codes={}; Object.keys(costMap).forEach(function(c){ codes[c]=true; }); Object.keys(ing).forEach(function(c){ codes[c]=true; });
+  var list=Object.keys(codes).map(function(c){
+    var ingreso=+ing[c]||0, costo=+costMap[c]||0, util=ingreso-costo;
+    return {nombre:c,ingreso:ingreso,costo:costo,util:util,pct:(ingreso>0?util/ingreso*100:null),estado:statusDe(c)};
+  }).sort(function(a,b){ return b.ingreso-a.ingreso || b.costo-a.costo; });
+  var totIng=0,totCost=0; list.forEach(function(r){ totIng+=r.ingreso; totCost+=r.costo; });
+  return {list:list,totIng:totIng,totCost:totCost,totUtil:totIng-totCost,totPct:(totIng>0?(totIng-totCost)/totIng*100:null)};
+}
+
+function populateMesesUtil(){
+  var s=document.getElementById('util-mes'); if(!s) return;
+  var actual=s.value;
+  var meses=mesesDisponibles();
+  var html='<option value="">Costos: todo (acumulado)</option>';
+  meses.forEach(function(m){
+    var d=new Date(m+'-01T12:00'); var lbl=d.toLocaleDateString('es-CO',{month:'long',year:'numeric'});
+    html+='<option value="'+m+'">Causado hasta '+lbl+'</option>';
+  });
+  s.innerHTML=html; if(actual) s.value=actual;
+}
+
+function renderUtilidad(){
+  populateMesesUtil();
+  var hastaMes=(document.getElementById('util-mes')||{}).value||'';
+  var q=((document.getElementById('srch-util')||{}).value||'').toLowerCase();
+  var d=computeUtilidad(hastaMes);
+  var sum=document.getElementById('util-summary');
+  if(sum){
+    var colT=d.totUtil>=0?'var(--green)':'var(--coral)';
+    sum.innerHTML=
+      '<div class="psum"><div class="psum-lbl">Ingreso (OC clientes)</div><div class="psum-val">'+cf(d.totIng)+'</div></div>'
+     +'<div class="psum"><div class="psum-lbl">Costo total</div><div class="psum-val">'+cf(d.totCost)+'</div></div>'
+     +'<div class="psum"><div class="psum-lbl">Utilidad</div><div class="psum-val" style="color:'+colT+'">'+cf(d.totUtil)+'</div></div>'
+     +'<div class="psum"><div class="psum-lbl">% Utilidad</div><div class="psum-val" style="color:'+colT+'">'+(d.totPct===null?'—':d.totPct.toFixed(1)+'%')+'</div></div>';
+  }
+  // Tabla por proyecto
+  var list=d.list;
+  if(q) list=list.filter(function(r){ return r.nombre.toLowerCase().includes(q); });
+  var cont=document.getElementById('util-list'); if(!cont) return;
+  var filas=list.map(function(r){
+    var fin=r.estado==='finalizado';
+    var col=r.util>=0?'var(--green)':'var(--coral)';
+    return '<tr'+(fin?' style="opacity:.7"':'')+'>'
+      +'<td>'+esc(r.nombre)+' '+(fin?'<span style="color:var(--green);font-size:.55rem">✅</span>':'')+'</td>'
+      +'<td class="r"><input class="inp" data-ingreso-u="'+esc(r.nombre)+'" type="number" min="0" value="'+(r.ingreso||'')+'" placeholder="0" style="width:120px;text-align:right;font-size:.72rem;padding:.2rem .35rem"></td>'
+      +'<td class="r">'+cf(r.costo)+'</td>'
+      +'<td class="r" style="color:'+col+';font-weight:700">'+cf(r.util)+'</td>'
+      +'<td class="r" style="color:'+col+';font-weight:700">'+(r.pct===null?'—':r.pct.toFixed(1)+'%')+'</td></tr>';
+  }).join('');
+  if(!list.length) filas='<tr><td colspan="5" style="color:var(--dim);padding:.6rem">Aún no hay proyectos con costos o ingreso cargado.</td></tr>';
+  var tabProy='<table class="proj-tbl"><thead><tr><th>Proyecto</th><th class="r">OC cliente (ingreso)</th><th class="r">Costo</th><th class="r">Utilidad</th><th class="r">%</th></tr></thead><tbody>'+filas+'</tbody></table>';
+  // Evolución por mes
+  var cm=costosPorMes();
+  var meses=Object.keys(cm).sort();
+  var acum=0;
+  var filasM=meses.map(function(mes){
+    acum+=cm[mes];
+    var utilAc=d.totIng-acum;
+    var pctAc=d.totIng>0?(utilAc/d.totIng*100):null;
+    var col=utilAc>=0?'var(--green)':'var(--coral)';
+    var lbl=new Date(mes+'-01T12:00').toLocaleDateString('es-CO',{month:'long',year:'numeric'});
+    return '<tr><td>'+lbl+'</td><td class="r">'+cf(cm[mes])+'</td><td class="r">'+cf(acum)+'</td>'
+      +'<td class="r" style="color:'+col+'">'+cf(utilAc)+'</td>'
+      +'<td class="r" style="color:'+col+'">'+(pctAc===null?'—':pctAc.toFixed(1)+'%')+'</td></tr>';
+  }).join('');
+  var tabMes = meses.length
+    ? '<div style="font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin:1.4rem 0 .4rem">Evolución por mes (utilidad acumulada vs ingreso total)</div>'
+      +'<table class="proj-tbl"><thead><tr><th>Mes</th><th class="r">Costo del mes</th><th class="r">Costo acumulado</th><th class="r">Utilidad acum.</th><th class="r">%</th></tr></thead><tbody>'+filasM+'</tbody></table>'
+    : '';
+  cont.innerHTML=tabProy+tabMes;
+  cont.querySelectorAll('[data-ingreso-u]').forEach(function(inp){
+    inp.addEventListener('change',function(){ setIngreso(inp.getAttribute('data-ingreso-u'), parseFloat(inp.value)||0); renderUtilidad(); });
+  });
+}
+
+function expUtilidad(){
+  if(typeof XLSX==='undefined'){ toast('Cargando XLSX…'); return; }
+  var hastaMes=(document.getElementById('util-mes')||{}).value||'';
+  var d=computeUtilidad(hastaMes);
+  var rows=[['STRAZA SAS — UTILIDAD POR PROYECTO'],
+    ['Generado:',new Date().toLocaleString('es-CO')],
+    ['Utilidad = OC cliente (ingreso) − costos cargados. % sobre el valor de la OC del cliente.'],[],
+    ['PROYECTO','ESTADO','OC CLIENTE (INGRESO)','COSTO','UTILIDAD','% UTILIDAD']];
+  d.list.forEach(function(r){
+    rows.push([r.nombre, r.estado==='finalizado'?'Finalizado':'En proceso', r.ingreso, r.costo, r.util, (r.pct===null?'':(r.pct/100))]);
+  });
+  rows.push([]);
+  rows.push(['TOTAL','',d.totIng,d.totCost,d.totUtil,(d.totPct===null?'':(d.totPct/100))]);
+  var ws=XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols']=[{wch:24},{wch:14},{wch:20},{wch:18},{wch:18},{wch:12}];
+  // formato % a la última columna
+  for(var i=5;i<rows.length;i++){ var cell=ws['F'+(i+1)]; if(cell&&typeof cell.v==='number'){ cell.z='0.0%'; } }
+  var cm=costosPorMes(); var meses=Object.keys(cm).sort(); var acum=0;
+  var rowsM=[['MES','COSTO DEL MES','COSTO ACUMULADO','UTILIDAD ACUM.','% UTILIDAD']];
+  meses.forEach(function(mes){ acum+=cm[mes]; var ua=d.totIng-acum; rowsM.push([mes,cm[mes],acum,ua,(d.totIng>0?ua/d.totIng:'')]); });
+  var wsM=XLSX.utils.aoa_to_sheet(rowsM); wsM['!cols']=[{wch:10},{wch:16},{wch:18},{wch:18},{wch:12}];
+  var wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Por proyecto');
+  XLSX.utils.book_append_sheet(wb,wsM,'Por mes');
+  var wbout=XLSX.write(wb,{bookType:'xlsx',type:'array'});
+  var blob=new Blob([wbout],{type:'application/octet-stream'});
+  var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='Straza_Utilidad_Proyectos.xlsx';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(a.href);
+  toast('Excel de utilidad exportado ✓');
+}
+
 // ── EVENTOS (todos aquí, sin onclick en HTML) ──
 document.addEventListener('DOMContentLoaded', function(){
   // Header
@@ -2161,9 +2641,11 @@ document.addEventListener('DOMContentLoaded', function(){
 
   // Tabs
   document.getElementById('tab-hist').addEventListener('click', function(){ showPage('hist'); });
+  document.getElementById('tab-req').addEventListener('click', function(){ showPage('req'); });
   document.getElementById('tab-proj').addEventListener('click', function(){ showPage('proj'); });
   document.getElementById('tab-ofi').addEventListener('click', function(){ showPage('ofi'); });
   document.getElementById('tab-pagar').addEventListener('click', function(){ showPage('pagar'); });
+  document.getElementById('tab-util').addEventListener('click', function(){ showPage('util'); });
   document.getElementById('tab-cfg').addEventListener('click', function(){ showPage('cfg'); });
 
   // Control de Proyectos
@@ -2207,6 +2689,30 @@ document.addEventListener('DOMContentLoaded', function(){
     btn.classList.add('on');
     renderPagar();
   });
+
+  // Utilidad
+  document.getElementById('srch-util').addEventListener('input', renderUtilidad);
+  document.getElementById('util-mes').addEventListener('change', renderUtilidad);
+  document.getElementById('btn-util-xls').addEventListener('click', expUtilidad);
+
+  // Requisiciones
+  document.getElementById('srch-req').addEventListener('input', renderReq);
+  document.getElementById('btn-req-crear').addEventListener('click', function(){ openReqDoc(''); });
+  document.getElementById('btn-req-genoc').addEventListener('click', generarOCDesdeReq);
+  document.getElementById('btn-req-xls').addEventListener('click', expReq);
+  document.getElementById('req-fbar').addEventListener('click', function(e){
+    var btn=e.target.closest('.fb'); if(!btn) return;
+    filtroReq=btn.getAttribute('data-rf');
+    document.querySelectorAll('#req-fbar .fb').forEach(function(b){ b.classList.remove('on'); });
+    btn.classList.add('on');
+    renderReq();
+  });
+  document.getElementById('btn-reqdoc-cancel').addEventListener('click', closeReqDoc);
+  document.getElementById('btn-reqdoc-ok').addEventListener('click', guardarReqDoc);
+  document.getElementById('modal-reqdoc').addEventListener('click', function(e){ if(e.target===this) closeReqDoc(); });
+  document.getElementById('btn-req-e-cancel').addEventListener('click', closeReqLinea);
+  document.getElementById('btn-req-e-ok').addEventListener('click', guardarReqLinea);
+  document.getElementById('modal-req').addEventListener('click', function(e){ if(e.target===this) closeReqLinea(); });
 
   // Filtros
   document.getElementById('fbars').addEventListener('click', function(e){
@@ -2316,6 +2822,25 @@ document.addEventListener('DOMContentLoaded', function(){
       }
     });
     if(changed){ saveOrdenes(list); toSend.forEach(function(r){ enviarOrdenServidor(r); }); }
+  })();
+
+  // Migrar la requisición maestra antigua a requisiciones por proyecto
+  (function migrarReqMaster(){
+    var rm=getOrdenes().find(function(o){ return o.esRequisicion && o.id==='req_master'; });
+    if(!rm || !rm.rows || !rm.rows.length || rm.anulada) return;
+    var groups={};
+    rm.rows.forEach(function(r){ var p=(r.proyecto||'Sin proyecto'); (groups[p]=groups[p]||[]).push(r); });
+    var list=getOrdenes(); var nuevos=[]; var seq=0;
+    Object.keys(groups).forEach(function(p){
+      var rec={id:'req_'+Date.now()+'_'+(seq++),esRequisicion:true,proyecto:p,nombre:'Requisición '+p,anulada:false,createdAt:Date.now(),updatedAt:Date.now(),
+        rows:groups[p].map(function(r){ return {id:r.id||('rq_'+Date.now()+'_'+(seq++)),item:r.item,cant:r.cant,vunit:r.vunit,vtotal:r.vtotal,pago:r.pago,antpct:r.antpct,estado:r.estado,ocId:r.ocId,ocNum:r.ocNum,fecha:r.fecha}; })};
+      list.push(rec); nuevos.push(rec);
+    });
+    var idx=list.findIndex(function(o){ return o.id==='req_master'; });
+    if(idx>=0){ list[idx].anulada=true; list[idx].updatedAt=Date.now(); }
+    saveOrdenes(list);
+    nuevos.forEach(function(r){ enviarOrdenServidor(r); });
+    if(idx>=0) enviarOrdenServidor(list[idx]);
   })();
   updateDL();
   renderHist();
