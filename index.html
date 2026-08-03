@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0048)file:///C:/Users/Usuario/Downloads/index_32.html -->
+<!-- saved from url=(0048)file:///C:/Users/Usuario/Downloads/index_34.html -->
 <html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -394,7 +394,7 @@ input,select,textarea{font-family:inherit;outline:none}
         </label>
         <span style="font-size:.62rem;color:var(--dim)">El backup se actualiza automáticamente cada vez que guardas o anulas una orden.</span>
       </div>
-      <div id="backup-list"><div style="display:flex;align-items:center;gap:.6rem;padding:.55rem .7rem;border:1px solid var(--brd2);background:rgba(74,222,128,.05)"><div style="flex:1"><div style="font-size:.75rem;font-weight:600;color:var(--green)">✓ Backup automático</div><div style="font-size:.65rem;color:var(--mid)">01 de ago de 2026, 01:01 p. m. · 90 órdenes · 27 proveedores</div></div><button class="btn-sm" id="btn-dl-bk">↓ Descargar</button><button class="btn-sm" id="btn-restore-bk">↺ Restaurar</button></div></div>
+      <div id="backup-list"><div style="display:flex;align-items:center;gap:.6rem;padding:.55rem .7rem;border:1px solid var(--brd2);background:rgba(74,222,128,.05)"><div style="flex:1"><div style="font-size:.75rem;font-weight:600;color:var(--green)">✓ Backup automático</div><div style="font-size:.65rem;color:var(--mid)">03 de ago de 2026, 03:43 p. m. · 90 órdenes · 27 proveedores</div></div><button class="btn-sm" id="btn-dl-bk">↓ Descargar</button><button class="btn-sm" id="btn-restore-bk">↺ Restaurar</button></div></div>
     </div>
   </div>
 </div>
@@ -2294,6 +2294,17 @@ function openReqDoc(id){
   document.getElementById('modal-reqdoc').classList.add('on');
 }
 function closeReqDoc(){ document.getElementById('modal-reqdoc').classList.remove('on'); }
+function nuevoProductoDe(reqId){
+  var d=getReqDoc(reqId); if(!d) return;
+  document.getElementById('reqdoc-id').value='';
+  document.getElementById('reqdoc-proj').value=d.proyecto||'';
+  document.getElementById('reqdoc-projname').value=nombreProyecto(d.proyecto)||'';
+  document.getElementById('reqdoc-nombre').value='';
+  document.getElementById('reqdoc-title').textContent='Nuevo producto — '+(d.proyecto||'');
+  updateProyectosDL();
+  document.getElementById('modal-reqdoc').classList.add('on');
+  setTimeout(function(){ document.getElementById('reqdoc-nombre').focus(); },60);
+}
 function autofillReqProjName(){
   var code=(document.getElementById('reqdoc-proj').value||'').trim();
   var f=document.getElementById('reqdoc-projname');
@@ -2330,7 +2341,7 @@ function openReqLinea(reqId,lineId){
   document.getElementById('req-e-vunit').value=r?(r.vunit||''):'';
   document.getElementById('req-e-pago').value=r?(r.pago||'Contado'):'Contado';
   document.getElementById('req-e-ant').value=r?(r.antpct||''):'';
-  document.getElementById('req-e-title').textContent=lineId?'Editar ítem':'Agregar ítem';
+  document.getElementById('req-e-title').textContent=(lineId?'Editar ítem':'Agregar ítem')+((getReqDoc(reqId)&&getReqDoc(reqId).nombre)?(' — '+getReqDoc(reqId).nombre):'');
   document.getElementById('modal-req').classList.add('on');
   if(!lineId) setTimeout(function(){ document.getElementById('req-e-item').focus(); },50);
 }
@@ -2476,6 +2487,7 @@ function renderReq(){
         +'<div class="proj-meta">Requisitado '+cf(tReq)+' · Pendiente '+cf(tPend)+' · Para arrancar '+cf(tArr)+'</div>'
       +'</div><div style="text-align:right;display:flex;flex-direction:column;gap:.4rem;align-items:flex-end">'
         +'<button class="btn-add" data-req-additem="'+d.id+'" style="padding:.32rem .7rem;font-size:.66rem">+ Agregar ítem</button>'
+        +'<button class="btn-cp" data-req-nuevoprod="'+d.id+'" style="padding:.28rem .6rem;font-size:.62rem">+ Otro producto (mismo proyecto)</button>'
         +'<div><button class="btn-sm" data-req-edit="'+d.id+'" style="padding:.2rem .5rem;font-size:.56rem">Editar</button> '
           +'<button class="btn-di" data-req-elim="'+d.id+'" title="Eliminar requisición">×</button></div>'
       +'</div></div>'
@@ -2484,6 +2496,7 @@ function renderReq(){
   }).join('');
   cont.querySelectorAll('[data-req-sel]').forEach(function(chk){ chk.addEventListener('change',function(){ reqSel[chk.getAttribute('data-req-sel')]=chk.checked; actualizarBtnGenOC(); }); });
   cont.querySelectorAll('[data-req-additem]').forEach(function(b){ b.addEventListener('click',function(){ openReqLinea(b.getAttribute('data-req-additem'),''); }); });
+  cont.querySelectorAll('[data-req-nuevoprod]').forEach(function(b){ b.addEventListener('click',function(){ nuevoProductoDe(b.getAttribute('data-req-nuevoprod')); }); });
   cont.querySelectorAll('[data-req-edit]').forEach(function(b){ b.addEventListener('click',function(){ openReqDoc(b.getAttribute('data-req-edit')); }); });
   cont.querySelectorAll('[data-req-elim]').forEach(function(b){ b.addEventListener('click',function(){ eliminarReqDoc(b.getAttribute('data-req-elim')); }); });
   cont.querySelectorAll('[data-rl-edit]').forEach(function(b){ b.addEventListener('click',function(){ var p=b.getAttribute('data-rl-edit').split('::'); openReqLinea(p[0],p[1]); }); });
