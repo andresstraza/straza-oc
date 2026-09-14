@@ -642,14 +642,14 @@ var DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbxEnB3l6HfXfm4nDL
 var API_URL = DEFAULT_API_URL; // URL del Apps Script
 
 // Llamadas via JSONP — evita CORS completamente
-function jsonpCall(params) {
+function jsonpCall(params, timeoutMs) {
   return new Promise(function(resolve, reject) {
     var cbName = 'cb_' + Date.now() + '_' + Math.floor(Math.random()*10000);
     var script = document.createElement('script');
     var url = API_URL + '?' + params + '&callback=' + cbName;
     var timer = setTimeout(function(){
       cleanup(); reject(new Error('Timeout'));
-    }, 15000);
+    }, timeoutMs||15000);
     window[cbName] = function(data){
       cleanup(); resolve(data);
     };
@@ -714,7 +714,7 @@ function sincronizar(silencioso) {
   if(API_URL==='PENDIENTE_URL'){ return; }
   if(!silencioso) toast('Sincronizando…');
   Promise.all([
-    jsonpCall('action=getOrdenesLista'),
+    jsonpCall('action=getOrdenesLista', 45000),
     jsonpCall('action=getProvs'),
     jsonpCall('action=getCFG')
   ]).then(function(results){
