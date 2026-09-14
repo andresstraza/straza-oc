@@ -365,6 +365,15 @@ input,select,textarea{font-family:inherit;outline:none}
   </div>
 
   <div class="sec" style="margin-top:.9rem">
+    <div class="sec-h">📦 Espacio de este navegador</div>
+    <div class="sec-b">
+      <p style="font-size:.7rem;color:var(--dim);margin-bottom:.6rem">El navegador tiene un límite de espacio (típicamente 5 MB). Con el tiempo, entre más órdenes se acumulen, más se va llenando. Solo se guardan completas las últimas órdenes tocadas aquí; las demás se completan solas al abrirlas, y siguen a salvo en el servidor.</p>
+      <div id="espacio-usado-oc-info" style="margin-bottom:.6rem"></div>
+      <button id="btn-liberar-espacio-oc" onclick="liberarEspacioOC()" style="background:transparent;border:1px solid var(--gold);color:var(--gold);padding:.52rem 1rem;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer">🧹 Liberar espacio ahora</button>
+    </div>
+  </div>
+
+  <div class="sec" style="margin-top:.9rem">
     <div class="sec-h">Consecutivos actuales</div>
     <div class="sec-b">
       <div class="g4" style="margin-bottom:.8rem">
@@ -654,6 +663,17 @@ function jsonpCall(params) {
     document.head.appendChild(script);
   });
 }
+
+// Envío por POST: manda el cuerpo completo sin pasar por la URL (que tiene un
+// límite de longitud). Antes, guardar una orden con muchos ítems podía fallar
+// en silencio si la URL quedaba demasiado larga — esto lo evita del todo.
+function postCall(bodyObj) {
+  return fetch(API_URL, {
+    method: 'POST',
+    headers: {'Content-Type': 'text/plain;charset=utf-8'}, // evita el preflight de CORS
+    body: JSON.stringify(bodyObj)
+  }).then(function(resp){ return resp.json(); });
+}
 function apiGet(action) {
   // Retorna Promise con objeto {json: fn}
   return {
@@ -677,27 +697,88 @@ function apiFetch(params) {
 
 // ── STORAGE LOCAL (cache) ──
 function sGet(k){ try{ return JSON.parse(localStorage.getItem('soc_'+k)||'null'); }catch(e){ return null; } }
-function sSet(k,v){ try{ localStorage.setItem('soc_'+k,JSON.stringify(v)); }catch(e){ toast('Error al guardar'); } }
+// Devuelve true si guardó bien, o false si falló (ej. sin espacio) — antes esto
+// solo mostraba un toast genérico y seguía como si hubiera guardado bien.
+function sSet(k,v){
+  try{
+    localStorage.setItem('soc_'+k,JSON.stringify(v));
+    return true;
+  }catch(e){
+    toast('⚠ No se pudo guardar — sin espacio en este navegador');
+    return false;
+  }
+}
 
 // ── SINCRONIZACIÓN ──
 function sincronizar(silencioso) {
   if(API_URL==='PENDIENTE_URL'){ return; }
   if(!silencioso) toast('Sincronizando…');
   Promise.all([
-    jsonpCall('action=getOrdenes'),
+    jsonpCall('action=getOrdenesLista'),
     jsonpCall('action=getProvs'),
     jsonpCall('action=getCFG')
   ]).then(function(results){
-    if(results[0].ordenes) sSet('ordenes', results[0].ordenes);
+    var pEspeciales = (results[0] && Array.isArray(results[0].lista))
+      ? _mezclarListaOrdenes(results[0].lista) : Promise.resolve();
     if(results[1].provs)   sSet('provs',   results[1].provs);
     if(results[2].cfg)     sSet('cfg',     results[2].cfg);
+    return pEspeciales;
+  }).then(function(){
     updateDL(); renderHist(); updateResetBtn();
+    mostrarEspacioUsadoOC();
     if(!silencioso) toast('Sincronizado ✓');
     actualizarIndicador(true);
   }).catch(function(){
     actualizarIndicador(false);
     if(!silencioso) toast('Sin conexión al servidor');
   });
+}
+
+// Combina la lista liviana del servidor con lo que ya hay en este navegador:
+// - Nunca se pierde una orden que solo exista aquí localmente (aún no
+//   confirmada en el servidor) ni una versión local más reciente que la del
+//   servidor — clave porque esta herramienta la usan varias personas a la vez
+//   desde computadores distintos.
+// - Los registros especiales (esCargo/esMeta/esRequisicion — usados por Caja
+//   menor, Proyectos y Requisiciones) SIEMPRE se traen completos, porque otras
+//   partes de la app dependen de tenerlos enteros en todo momento.
+// - Las órdenes normales que ya tenemos completas y al día se conservan
+//   completas (sincronizar no las vuelve a aligerar innecesariamente).
+function _mezclarListaOrdenes(listaServidor){
+  var local = getOrdenes();
+  var localPorId = {}; local.forEach(function(o){ localPorId[o.id]=o; });
+  var idsServidor = {};
+  var promesasEspeciales = [];
+  var combinadas = listaServidor.map(function(meta){
+    idsServidor[meta.id]=true;
+    var loc = localPorId[meta.id];
+    if(meta.especial){
+      if(!loc || !Array.isArray(loc.rows) || (meta.updatedAt||0) > (loc.updatedAt||0)){
+        promesasEspeciales.push(
+          jsonpCall('action=getOrden&id='+encodeURIComponent(meta.id)).then(function(res){
+            if(res && res.orden){
+              var l2=getOrdenes(); var idx2=l2.findIndex(function(x){ return x.id===meta.id; });
+              if(idx2>=0) l2[idx2]=res.orden; else l2.push(res.orden);
+              saveOrdenes(l2);
+            }
+          }).catch(function(){})
+        );
+      }
+      return loc || { id:meta.id, _pendienteEspecial:true };
+    }
+    if(loc && Array.isArray(loc.rows) && (loc.updatedAt||0) >= (meta.updatedAt||0)){
+      return loc; // ya la tenemos completa y al día (o más nueva localmente): se conserva
+    }
+    // No la tenemos completa, o el servidor tiene una versión más nueva: guardar liviana
+    return { id:meta.id, num:meta.num, tipo:meta.tipo, prov:meta.prov, total:meta.total,
+             fecha:meta.fecha, anulada:(meta.estado==='ANULADA'), updatedAt:meta.updatedAt,
+             _completoEnNube:true };
+  });
+  // Conservar cualquier orden que exista SOLO localmente (aún no llegó al servidor)
+  local.forEach(function(o){ if(!idsServidor[o.id]) combinadas.push(o); });
+
+  saveOrdenes(combinadas);
+  return Promise.all(promesasEspeciales);
 }
 
 function actualizarIndicador(ok) {
@@ -857,16 +938,21 @@ function saveProvDir(){
   toast('Proveedor guardado ✓');
   renderProvDir();
   if(API_URL!=='PENDIENTE_URL'){
-    jsonpCall('payload='+encodeURIComponent(JSON.stringify({action:'saveProvs',data:list})))
-    .then(function(res){ if(res.ok) actualizarIndicador(true); })
+    postCall({action:'saveProvs',data:list})
+    .then(function(res){ if(res && res.ok) actualizarIndicador(true); })
     .catch(function(){ actualizarIndicador(false); });
   }
 }
 
 function delProv(nombre){
   if(!confirm('¿Eliminar este proveedor?')) return;
-  saveProvs(getProvs().filter(function(p){ return p.nombre!==nombre; }));
+  var list=getProvs().filter(function(p){ return p.nombre!==nombre; });
+  saveProvs(list);
   updateDL(); renderProvDir(); toast('Proveedor eliminado');
+  // Antes esto no se enviaba a la nube — quedaba borrado solo en este navegador
+  if(API_URL!=='PENDIENTE_URL'){
+    postCall({action:'saveProvs',data:list}).catch(function(){});
+  }
 }
 
 function renderProvDir(){
@@ -894,7 +980,100 @@ function renderProvDir(){
 
 // ── ÓRDENES ──
 function getOrdenes(){ return sGet('ordenes')||[]; }
-function saveOrdenes(list){ sSet('ordenes',list); }
+function saveOrdenes(list){ return sSet('ordenes',list); }
+
+/* ============ ESPACIO USADO Y ALIGERADO AUTOMÁTICO ============ */
+// El navegador tiene un límite de espacio (típicamente 5 MB) para TODO lo
+// que guarda esta página. Como esta herramienta se usa entre varias personas
+// y con el tiempo se acumulan muchas órdenes, hay que evitar llenarlo.
+// Solución: solo se guardan COMPLETAS (con todos sus ítems) las últimas
+// MAX_CACHE_FULL_OC órdenes tocadas en ESTE navegador; las demás quedan solo
+// con lo necesario para verlas en el historial (número, proveedor, total,
+// fecha, estado) y se completan solas al abrirlas.
+var MAX_CACHE_FULL_OC = 25;
+
+function _bytesUsadosLocalStorageOC(){
+  var bytes = 0;
+  for(var i=0;i<localStorage.length;i++){
+    var k = localStorage.key(i);
+    bytes += (k.length + (localStorage.getItem(k)||'').length) * 2;
+  }
+  return bytes;
+}
+function mostrarEspacioUsadoOC(){
+  var cont = document.getElementById('espacio-usado-oc-info');
+  if(!cont) return;
+  var bytes = _bytesUsadosLocalStorageOC();
+  var mb = (bytes/1024/1024).toFixed(2);
+  var limite = 5;
+  var pct = Math.min(100, Math.round((bytes/1024/1024/limite)*100));
+  var color = pct<60 ? 'var(--green)' : (pct<80 ? 'var(--gold)' : 'var(--coral)');
+  cont.innerHTML = '<p style="font-size:.7rem;color:var(--dim)">Usando aproximadamente <strong style="color:'+color+'">'+mb+' MB</strong> de un límite típico de '+limite+' MB ('+pct+'%).</p>'+
+    (pct>=80 ? '<p style="font-size:.7rem;color:var(--coral);font-weight:700">⚠ Espacio casi lleno — usa "Liberar espacio" abajo.</p>' : '');
+}
+function _avisarSiEspacioCriticoOC(){
+  try{
+    var bytes = _bytesUsadosLocalStorageOC();
+    var pct = Math.round((bytes/1024/1024/5)*100);
+    if(pct>=80) toast('⚠ El navegador está casi lleno ('+pct+'%). Ve a Configuración → Liberar espacio.');
+  }catch(e){}
+}
+
+// Convierte una orden completa en su versión liviana. Solo se quita ".rows"
+// (los ítems — lo que realmente pesa cuando una orden tiene muchas líneas).
+// Se CONSERVAN todos los campos financieros (IVA, retenciones, anticipo, pago,
+// etc.) porque los reportes de Proyectos/Utilidad/Cuentas por pagar los
+// necesitan para sumar bien, incluso en órdenes viejas ya aligeradas. Solo el
+// desglose "Costos por producto" (que sí depende de cada ítem) queda
+// incompleto para una orden aligerada hasta que se vuelve a abrir.
+function _aligerarOrden(o){
+  var copia = Object.assign({}, o);
+  delete copia.rows;
+  copia._completoEnNube = true;
+  return copia;
+}
+// Tras confirmar que la nube ya tiene la orden actual, revisa si hay demasiadas
+// órdenes completas guardadas localmente y aligera las más viejas (nunca la
+// que se acaba de guardar, ni las de tipo especial usadas por Requisiciones/
+// Proyectos que necesitan estar siempre completas para calcular sus totales).
+function _aligerarOrdenesViejas(idActual){
+  try{
+    var list = getOrdenes();
+    var completas = list.filter(function(o){
+      return Array.isArray(o.rows) && !o._completoEnNube && !o.esCargo && !o.esMeta && !o.esRequisicion;
+    });
+    if(completas.length<=MAX_CACHE_FULL_OC) { mostrarEspacioUsadoOC(); return; }
+    completas.sort(function(a,b){ return (a.updatedAt||0)-(b.updatedAt||0); });
+    var sobran = completas.length - MAX_CACHE_FULL_OC;
+    for(var i=0;i<sobran;i++){
+      if(completas[i].id===idActual) continue;
+      var idx = list.findIndex(function(o){ return o.id===completas[i].id; });
+      if(idx>=0) list[idx] = _aligerarOrden(list[idx]);
+    }
+    saveOrdenes(list);
+    mostrarEspacioUsadoOC();
+  }catch(e){}
+}
+
+// Botón manual "Liberar espacio ahora" — hace lo mismo que el aligerado
+// automático, pero al instante y sobre TODAS las órdenes completas que se
+// puedan aligerar ahora mismo (no solo cuando se guarda algo nuevo).
+function liberarEspacioOC(){
+  var list = getOrdenes();
+  var n = 0;
+  list = list.map(function(o){
+    if(Array.isArray(o.rows) && !o._completoEnNube && !o.esCargo && !o.esMeta && !o.esRequisicion){
+      n++; return _aligerarOrden(o);
+    }
+    return o;
+  });
+  if(!n){ toast('No hay nada para aligerar ahora mismo.'); return; }
+  saveOrdenes(list);
+  renderHist();
+  mostrarEspacioUsadoOC();
+  toast(n+' orden(es) aligeradas — siguen en el Historial, se completan al abrirlas ✓');
+}
+
 
 function nextNum(tipo, callback){
   // Si no hay API configurada, usar local
@@ -934,7 +1113,7 @@ function showPage(id){
   if(id==='pagar') renderPagar();
   if(id==='util') renderUtilidad();
   if(id==='cierre') renderCierre();
-  if(id==='cfg'){ loadCFGForm(); renderProvDir(); renderBackups(); }
+  if(id==='cfg'){ loadCFGForm(); renderProvDir(); renderBackups(); mostrarEspacioUsadoOC(); }
 }
 
 function goHist(){
@@ -1018,8 +1197,8 @@ function anularOC(id){
   makeBackup();
   // Enviar anulación al servidor
   if(API_URL!=='PENDIENTE_URL'){
-    jsonpCall('payload='+encodeURIComponent(JSON.stringify({action:'anularOrden',id:id,motivo:motivo})))
-    .then(function(res){ if(res.ok) actualizarIndicador(true); })
+    postCall({action:'anularOrden',id:id,motivo:motivo})
+    .then(function(res){ if(res && res.ok) actualizarIndicador(true); })
     .catch(function(){ actualizarIndicador(false); });
   }
   toast('Orden '+o.num+' anulada');
@@ -1045,12 +1224,33 @@ function nuevaOC(){
   });
 }
 
+// Devuelve una Promise que resuelve a la orden COMPLETA (con .rows), trayéndola
+// de la nube si está aligerada. Se usa en cualquier lugar que necesite los
+// ítems de la orden, no solo al abrirla para editar.
+function _asegurarOrdenCompleta(o){
+  if(Array.isArray(o.rows)) return Promise.resolve(o);
+  if(API_URL==='PENDIENTE_URL') return Promise.reject(new Error('sin-nube'));
+  return jsonpCall('action=getOrden&id='+encodeURIComponent(o.id)).then(function(res){
+    if(res && res.orden){
+      var list2=getOrdenes(); var idx2=list2.findIndex(function(x){ return x.id===o.id; });
+      if(idx2>=0){ list2[idx2]=res.orden; saveOrdenes(list2); }
+      return res.orden;
+    }
+    throw new Error('no-encontrada');
+  });
+}
+
 function openOC(id){
   var o=getOrdenes().find(function(x){ return x.id===id; });
   if(!o) return;
-  oc=JSON.parse(JSON.stringify(o));
-  rows=JSON.parse(JSON.stringify(o.rows||[{desc:'',cant:1,unit:'Unidad',vru:0}]));
-  showForm();
+  if(!Array.isArray(o.rows)) toast('Cargando los ítems de la orden desde la nube...');
+  _asegurarOrdenCompleta(o).then(function(completa){
+    oc=JSON.parse(JSON.stringify(completa));
+    rows=JSON.parse(JSON.stringify(completa.rows||[{desc:'',cant:1,unit:'Unidad',vru:0}]));
+    showForm();
+  }).catch(function(){
+    toast('No se pudo traer la orden completa (revisa tu conexión)');
+  });
 }
 
 function showForm(){
@@ -1247,26 +1447,29 @@ function duplicarOC(id){
   if(!o){ toast('Orden no encontrada'); return; }
   var tipo=o.tipo||'COM';
   toast('Duplicando… obteniendo consecutivo');
-  nextNum(tipo, function(num){
-    // Clon profundo, con id y consecutivo nuevos; sin marcas de anulación
-    var copia=JSON.parse(JSON.stringify(o));
-    copia.id='oc_'+Date.now();
-    copia.num=num;
-    copia.tipo=tipo;
-    copia.fecha=new Date().toISOString().slice(0,10);
-    copia.createdAt=Date.now();
-    copia.updatedAt=Date.now();
-    delete copia.anulada; delete copia.motivoAnulacion; delete copia.fechaAnulacion;
-    copia.rows=(o.rows||[]).map(function(r){
-      return {desc:r.desc||'',cant:r.cant||1,unit:r.unit||'Unidad',vru:r.vru||0,proyecto:r.proyecto||''};
+  _asegurarOrdenCompleta(o).then(function(oCompleta){
+    o=oCompleta;
+    nextNum(tipo, function(num){
+      // Clon profundo, con id y consecutivo nuevos; sin marcas de anulación
+      var copia=JSON.parse(JSON.stringify(o));
+      copia.id='oc_'+Date.now();
+      copia.num=num;
+      copia.tipo=tipo;
+      copia.fecha=new Date().toISOString().slice(0,10);
+      copia.createdAt=Date.now();
+      copia.updatedAt=Date.now();
+      delete copia.anulada; delete copia.motivoAnulacion; delete copia.fechaAnulacion;
+      copia.rows=(o.rows||[]).map(function(r){
+        return {desc:r.desc||'',cant:r.cant||1,unit:r.unit||'Unidad',vru:r.vru||0,proyecto:r.proyecto||''};
+      });
+      if(!copia.rows.length) copia.rows=[{desc:'',cant:1,unit:'Unidad',vru:0,proyecto:copia.svref||''}];
+      oc=copia;
+      rows=JSON.parse(JSON.stringify(copia.rows));
+      showForm();
+      toast('Copia creada como '+num+' — revisa y guarda');
+      schedSave();
     });
-    if(!copia.rows.length) copia.rows=[{desc:'',cant:1,unit:'Unidad',vru:0,proyecto:copia.svref||''}];
-    oc=copia;
-    rows=JSON.parse(JSON.stringify(copia.rows));
-    showForm();
-    toast('Copia creada como '+num+' — revisa y guarda');
-    schedSave();
-  });
+  }).catch(function(){ toast('No se pudo traer la orden completa para duplicarla'); });
 }
 
 // ── DATALIST DE PROYECTOS ──
@@ -1384,17 +1587,26 @@ function autoSave(){
   var list=getOrdenes();
   var idx=list.findIndex(function(o){ return o.id===data.id; });
   if(idx>=0) list[idx]=data; else list.push(data);
-  saveOrdenes(list);
+  var guardoLocal = saveOrdenes(list);
   oc=data;
-  setSaveLbl('Guardado ✓','ok');
+  if(guardoLocal){
+    setSaveLbl('Guardado ✓','ok');
+  } else {
+    setSaveLbl('⚠ NO se guardó — sin espacio','err');
+  }
   makeBackup();
-  // Enviar al servidor si está configurado
+  // Enviar al servidor SIEMPRE, incluso si el guardado local falló — la nube
+  // no depende del espacio de este navegador, así no se pierde el trabajo
+  // mientras se libera espacio.
   if(API_URL!=='PENDIENTE_URL'){
-    jsonpCall('payload='+encodeURIComponent(JSON.stringify({action:'saveOrden',data:data})))
+    postCall({action:'saveOrden',data:data})
     .then(function(res){
-      if(res.ok) actualizarIndicador(true);
+      if(res && res.ok){
+        actualizarIndicador(true);
+        _aligerarOrdenesViejas(data.id);
+      }
       else { actualizarIndicador(false); toast('Error al guardar en servidor'); }
-    }).catch(function(){ actualizarIndicador(false); });
+    }).catch(function(){ actualizarIndicador(false); toast('Sin conexión — el cambio quedó local, se reintentará'); });
   }
 }
 
@@ -1575,10 +1787,13 @@ function expPDF(){
 function expPDFById(id){
   var o=getOrdenes().find(function(x){ return x.id===id; });
   if(!o) return;
-  var w=window.open('','_blank');
-  w.document.write(buildPDF(Object.assign({},o,{rows:o.rows||[]})));
-  w.document.close();
-  setTimeout(function(){ w.print(); },700);
+  if(!Array.isArray(o.rows)) toast('Cargando los ítems desde la nube...');
+  _asegurarOrdenCompleta(o).then(function(completa){
+    var w=window.open('','_blank');
+    w.document.write(buildPDF(Object.assign({},completa,{rows:completa.rows||[]})));
+    w.document.close();
+    setTimeout(function(){ w.print(); },700);
+  }).catch(function(){ toast('No se pudo traer la orden completa para el PDF'); });
 }
 
 function enviarEmail(){
@@ -3340,6 +3555,7 @@ document.addEventListener('DOMContentLoaded', function(){
   // Autobackup local
   makeBackup();
   setInterval(function(){ makeBackup(); }, 10 * 60 * 1000);
+  _avisarSiEspacioCriticoOC();
 
   // Si hay URL configurada, sincronizar al abrir
   if(API_URL !== 'PENDIENTE_URL'){
