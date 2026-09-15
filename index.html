@@ -714,17 +714,18 @@ function sincronizar(silencioso) {
   if(API_URL==='PENDIENTE_URL'){ return; }
   if(!silencioso) toast('Sincronizando…');
   Promise.all([
-    jsonpCall('action=getOrdenesLista', 45000),
+    jsonpCall('action=getOrdenes', 60000),
     jsonpCall('action=getProvs'),
     jsonpCall('action=getCFG')
   ]).then(function(results){
-    var pEspeciales = (results[0] && Array.isArray(results[0].lista))
-      ? _mezclarListaOrdenes(results[0].lista) : Promise.resolve();
+    if(results[0] && Array.isArray(results[0].ordenes)){
+      _mezclarOrdenesCompletas(results[0].ordenes);
+    }
     if(results[1].provs)   sSet('provs',   results[1].provs);
     if(results[2].cfg)     sSet('cfg',     results[2].cfg);
-    return pEspeciales;
   }).then(function(){
     updateDL(); renderHist(); updateResetBtn();
+    _aligerarOrdenesViejas((oc && oc.id) || null); // mantener el navegador liviano tras traer todo completo
     mostrarEspacioUsadoOC();
     if(!silencioso) toast('Sincronizado ✓');
     actualizarIndicador(true);
@@ -734,51 +735,27 @@ function sincronizar(silencioso) {
   });
 }
 
-// Combina la lista liviana del servidor con lo que ya hay en este navegador:
+// Combina las órdenes COMPLETAS del servidor (siempre con fecha correcta,
+// porque viene del bloque JSON de cada una, no de una columna aparte) con lo
+// que ya hay en este navegador:
 // - Nunca se pierde una orden que solo exista aquí localmente (aún no
 //   confirmada en el servidor) ni una versión local más reciente que la del
 //   servidor — clave porque esta herramienta la usan varias personas a la vez
 //   desde computadores distintos.
-// - Los registros especiales (esCargo/esMeta/esRequisicion — usados por Caja
-//   menor, Proyectos y Requisiciones) SIEMPRE se traen completos, porque otras
-//   partes de la app dependen de tenerlos enteros en todo momento.
-// - Las órdenes normales que ya tenemos completas y al día se conservan
-//   completas (sincronizar no las vuelve a aligerar innecesariamente).
-function _mezclarListaOrdenes(listaServidor){
+function _mezclarOrdenesCompletas(ordenesServidor){
   var local = getOrdenes();
   var localPorId = {}; local.forEach(function(o){ localPorId[o.id]=o; });
   var idsServidor = {};
-  var promesasEspeciales = [];
-  var combinadas = listaServidor.map(function(meta){
-    idsServidor[meta.id]=true;
-    var loc = localPorId[meta.id];
-    if(meta.especial){
-      if(!loc || !Array.isArray(loc.rows) || (meta.updatedAt||0) > (loc.updatedAt||0)){
-        promesasEspeciales.push(
-          jsonpCall('action=getOrden&id='+encodeURIComponent(meta.id)).then(function(res){
-            if(res && res.orden){
-              var l2=getOrdenes(); var idx2=l2.findIndex(function(x){ return x.id===meta.id; });
-              if(idx2>=0) l2[idx2]=res.orden; else l2.push(res.orden);
-              saveOrdenes(l2);
-            }
-          }).catch(function(){})
-        );
-      }
-      return loc || { id:meta.id, _pendienteEspecial:true };
-    }
-    if(loc && Array.isArray(loc.rows) && (loc.updatedAt||0) >= (meta.updatedAt||0)){
-      return loc; // ya la tenemos completa y al día (o más nueva localmente): se conserva
-    }
-    // No la tenemos completa, o el servidor tiene una versión más nueva: guardar liviana
-    return { id:meta.id, num:meta.num, tipo:meta.tipo, prov:meta.prov, total:meta.total,
-             fecha:meta.fecha, anulada:(meta.estado==='ANULADA'), updatedAt:meta.updatedAt,
-             _completoEnNube:true };
+  var combinadas = ordenesServidor.map(function(srv){
+    idsServidor[srv.id]=true;
+    var loc = localPorId[srv.id];
+    if(loc && (loc.updatedAt||0) > (srv.updatedAt||0)) return loc; // local más nueva: se conserva
+    return srv; // el servidor manda (viene siempre completa, con fecha correcta)
   });
   // Conservar cualquier orden que exista SOLO localmente (aún no llegó al servidor)
   local.forEach(function(o){ if(!idsServidor[o.id]) combinadas.push(o); });
 
   saveOrdenes(combinadas);
-  return Promise.all(promesasEspeciales);
 }
 
 function actualizarIndicador(ok) {
