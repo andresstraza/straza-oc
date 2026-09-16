@@ -367,7 +367,7 @@ input,select,textarea{font-family:inherit;outline:none}
   <div class="sec" style="margin-top:.9rem">
     <div class="sec-h">📦 Espacio de este navegador</div>
     <div class="sec-b">
-      <p style="font-size:.7rem;color:var(--dim);margin-bottom:.6rem">El navegador tiene un límite de espacio (típicamente 5 MB). Con el tiempo, entre más órdenes se acumulen, más se va llenando. Solo se guardan completas las últimas órdenes tocadas aquí; las demás se completan solas al abrirlas, y siguen a salvo en el servidor.</p>
+      <p style="font-size:.7rem;color:var(--dim);margin-bottom:.6rem">El navegador tiene un límite de espacio (típicamente 5 MB). Todas tus órdenes se guardan completas aquí para que Proyectos y Utilidad sumen bien. Si algún día el espacio se llega a llenar, puedes aligerar las más viejas a propósito con el botón de abajo — pero mientras estén aligeradas, sus ítems no se contarán en esos reportes hasta que las abras de nuevo.</p>
       <div id="espacio-usado-oc-info" style="margin-bottom:.6rem"></div>
       <button id="btn-liberar-espacio-oc" onclick="liberarEspacioOC()" style="background:transparent;border:1px solid var(--gold);color:var(--gold);padding:.52rem 1rem;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer">🧹 Liberar espacio ahora</button>
     </div>
@@ -725,7 +725,9 @@ function sincronizar(silencioso) {
     if(results[2].cfg)     sSet('cfg',     results[2].cfg);
   }).then(function(){
     updateDL(); renderHist(); updateResetBtn();
-    _aligerarOrdenesViejas((oc && oc.id) || null); // mantener el navegador liviano tras traer todo completo
+    // No se aligera automáticamente: Proyectos y Utilidad necesitan los
+    // ítems completos de TODAS las órdenes para sumar bien. Si el espacio se
+    // llega a llenar, usa "Liberar espacio ahora" en Configuración a propósito.
     mostrarEspacioUsadoOC();
     if(!silencioso) toast('Sincronizado ✓');
     actualizarIndicador(true);
@@ -1036,6 +1038,7 @@ function _aligerarOrdenesViejas(idActual){
 // automático, pero al instante y sobre TODAS las órdenes completas que se
 // puedan aligerar ahora mismo (no solo cuando se guarda algo nuevo).
 function liberarEspacioOC(){
+  if(!confirm('⚠ Importante: mientras una orden esté aligerada, sus ítems NO se contarán en los paneles de Proyectos ni Utilidad (se completan solos al abrirla, pero mientras tanto esos totales quedarán incompletos).\n\n¿Continuar de todas formas?')) return;
   var list = getOrdenes();
   var n = 0;
   list = list.map(function(o){
@@ -1048,7 +1051,7 @@ function liberarEspacioOC(){
   saveOrdenes(list);
   renderHist();
   mostrarEspacioUsadoOC();
-  toast(n+' orden(es) aligeradas — siguen en el Historial, se completan al abrirlas ✓');
+  toast(n+' orden(es) aligeradas — sus ítems no contarán en Proyectos/Utilidad hasta que las vuelvas a abrir ✓');
 }
 
 
@@ -1580,7 +1583,8 @@ function autoSave(){
     .then(function(res){
       if(res && res.ok){
         actualizarIndicador(true);
-        _aligerarOrdenesViejas(data.id);
+        // No se aligera automáticamente: Proyectos y Utilidad necesitan los
+        // ítems completos de todas las órdenes. Ver "Liberar espacio ahora".
       }
       else { actualizarIndicador(false); toast('Error al guardar en servidor'); }
     }).catch(function(){ actualizarIndicador(false); toast('Sin conexión — el cambio quedó local, se reintentará'); });
