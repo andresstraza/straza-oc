@@ -206,6 +206,7 @@ input,select,textarea{font-family:inherit;outline:none}
 <div class="page on" id="page-hist">
   <div class="toolbar">
     <input class="srch" id="srch" placeholder="Buscar proveedor, número, referencia...">
+    <button class="btn-xls" id="btn-informe-sem" style="padding:.48rem 1rem;white-space:nowrap">📄 Informe semanal</button>
   </div>
   <div class="fbars" id="fbars">
     <button class="fb on" data-t="ALL">Todas</button>
@@ -523,6 +524,18 @@ input,select,textarea{font-family:inherit;outline:none}
 </div>
 
 <!-- MODAL CREAR/EDITAR REQUISICIÓN -->
+<div class="mover" id="modal-semanal">
+  <div class="mbox">
+    <div class="mtitle">Informe semanal para contabilidad</div>
+    <div style="font-size:.62rem;color:var(--dim);margin-bottom:.7rem;line-height:1.5">Órdenes emitidas entre las fechas elegidas, con base, IVA y retenciones listas para contabilidad. Por defecto trae la semana actual (lunes a domingo); puedes cambiar las fechas.</div>
+    <div class="g2" style="margin-bottom:.7rem">
+      <div class="f"><label>Desde</label><input class="inp" id="sem-desde" type="date"></div>
+      <div class="f"><label>Hasta</label><input class="inp" id="sem-hasta" type="date"></div>
+    </div>
+    <div class="mbtns"><button class="mcancel" id="btn-sem-cancel">Cancelar</button><button class="mok" id="btn-sem-ok">↓ Exportar Excel</button></div>
+  </div>
+</div>
+
 <div class="mover" id="modal-reqdoc">
   <div class="mbox">
     <div class="mtitle" id="reqdoc-title">Nueva requisición</div>
@@ -2814,6 +2827,54 @@ function expReq(docs){
   toast('Excel de requisiciones exportado ✓');
 }
 
+// ── INFORME SEMANAL (para contabilidad) ──
+function rangoSemana(fecha){
+  var d=fecha?new Date(fecha+'T12:00'):new Date();
+  var day=d.getDay(); var diff=(day===0?-6:1-day);
+  var mon=new Date(d); mon.setDate(d.getDate()+diff);
+  var sun=new Date(mon); sun.setDate(mon.getDate()+6);
+  return {desde:mon.toISOString().slice(0,10), hasta:sun.toISOString().slice(0,10)};
+}
+function openInformeSemanal(){
+  var r=rangoSemana();
+  document.getElementById('sem-desde').value=r.desde;
+  document.getElementById('sem-hasta').value=r.hasta;
+  document.getElementById('modal-semanal').classList.add('on');
+}
+function expSemanal(){
+  if(typeof XLSX==='undefined'){ ensureXLSX(expSemanal); return; }
+  var desde=(document.getElementById('sem-desde')||{}).value||'';
+  var hasta=(document.getElementById('sem-hasta')||{}).value||'';
+  if(!desde||!hasta){ toast('Elige las dos fechas'); return; }
+  if(desde>hasta){ var t=desde; desde=hasta; hasta=t; }
+  var det=[]; var T={base:0,iva:0,rete:0,rica:0,total:0};
+  getOrdenes().forEach(function(o){
+    if(o.anulada||o.esCargo||o.esMeta||o.esRequisicion) return;
+    if(!o.fecha || o.fecha<desde || o.fecha>hasta) return;
+    var g=desgloseOC(o);
+    T.base+=g.sub; T.iva+=g.iva; T.rete+=g.rete; T.rica+=g.rica; T.total+=g.total;
+    det.push([o.num||'',o.fecha||'',o.prov||'',o.nit||'',codigosDeOrden(o),o.pago||'',g.sub,g.iva,g.rete,g.rica,g.total]);
+  });
+  det.sort(function(a,b){ if(a[1]!==b[1]) return a[1]<b[1]?-1:1; return (a[0]<b[0]?-1:1); });
+  var rows=[['STRAZA SAS — INFORME SEMANAL DE ÓRDENES DE COMPRA'],
+    ['Periodo:',desde+' a '+hasta],
+    ['Generado:',new Date().toLocaleString('es-CO')],
+    ['Órdenes emitidas en el periodo:',det.length],[],
+    ['OC','FECHA','PROVEEDOR','NIT','CÓDIGO(S)','FORMA PAGO','BASE','IVA','RETEFUENTE','RETEICA','TOTAL']];
+  det.forEach(function(r){ rows.push(r); });
+  rows.push([]);
+  rows.push(['TOTAL','','','','','',T.base,T.iva,T.rete,T.rica,T.total]);
+  var ws=XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols']=[{wch:12},{wch:12},{wch:28},{wch:16},{wch:18},{wch:16},{wch:16},{wch:14},{wch:14},{wch:12},{wch:16}];
+  var wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'Informe semanal');
+  var wbout=XLSX.write(wb,{bookType:'xlsx',type:'array'});
+  var blob=new Blob([wbout],{type:'application/octet-stream'});
+  var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='Straza_Informe_Semanal_'+desde+'_a_'+hasta+'.xlsx';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(a.href);
+  toast('Informe semanal exportado ✓');
+  document.getElementById('modal-semanal').classList.remove('on');
+}
+
 // ── CIERRE MENSUAL ──
 function mesesCierre(){
   var set={};
@@ -3112,6 +3173,10 @@ function expUtilidad(){
 document.addEventListener('DOMContentLoaded', function(){
   // Header
   document.getElementById('btn-nueva').addEventListener('click', nuevaOC);
+  document.getElementById('btn-informe-sem').addEventListener('click', openInformeSemanal);
+  document.getElementById('btn-sem-cancel').addEventListener('click', function(){ document.getElementById('modal-semanal').classList.remove('on'); });
+  document.getElementById('btn-sem-ok').addEventListener('click', expSemanal);
+  document.getElementById('modal-semanal').addEventListener('click', function(e){ if(e.target===this) this.classList.remove('on'); });
 
   // Tabs
   document.getElementById('tab-hist').addEventListener('click', function(){ showPage('hist'); });
